@@ -1,0 +1,18 @@
+.selector {
+  height: 100%;
+  width: 75%;
+  border-top: 2px groove lightgray;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  .select-prev {
+
+  }
+  .select-month {
+    font-size: 2.5vw;
+  }
+  .select-next {
+
+  }
+}
