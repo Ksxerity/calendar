@@ -12,7 +12,39 @@ import {
 
 let selectedDate: ISelectedDate;
 let dispatch: AppDispatch;
-let daysInMonth: Array<Array<util.DayType>>;
+
+const handleMonthClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  // Create modal here
+};
+
+const handleArrowClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  const newDate = { ...selectedDate };
+  if (event.currentTarget.id === 'prev') {
+    if (newDate.month === 0) {
+      newDate.month = 11;
+      newDate.year -= 1;
+    } else {
+      newDate.month -= 1;
+    }
+  } else if (newDate.month === 11) {
+    newDate.month = 0;
+    newDate.year += 1;
+  } else {
+    newDate.month += 1;
+  }
+  const numberOfDaysInNewMonth = util.getNumberOfDaysInMonth(newDate.month, newDate.year);
+  newDate.day = newDate.day > numberOfDaysInNewMonth ? numberOfDaysInNewMonth : newDate.day;
+  dispatch(selectNewDate(newDate));
+};
+
+const populateMonthLabel = (): string => {
+  const currentDate = new Date(selectedDate.year, selectedDate.month, selectedDate.day);
+  let monthLabel = currentDate.toLocaleString('default', { month: 'long' });
+  if (selectedDate.year !== new Date().getFullYear()) {
+    monthLabel = `${monthLabel} ${selectedDate.year}`;
+  }
+  return monthLabel;
+};
 
 const Selector = (): JSX.Element => {
   selectedDate = useSelector((state: RootState) => state.date.selectedDate);
@@ -20,13 +52,13 @@ const Selector = (): JSX.Element => {
 
   return (
     <div className={styles.selector}>
-      <button type="button" className={styles['select-prev']}>
+      <button id="prev" type="button" className={styles['select-prev']} onClick={handleArrowClick}>
         <img src={LeftArrow} alt="Left arrow button" />
       </button>
-      <button type="button" className={styles['select-month']}>
-        {new Date(selectedDate.year, selectedDate.month, selectedDate.day).toLocaleString('default', { month: 'long' })}
+      <button type="button" className={styles['select-month']} onClick={handleMonthClick}>
+        {populateMonthLabel()}
       </button>
-      <button type="button" className={styles['select-next']}>
+      <button id="next" type="button" className={styles['select-next']} onClick={handleArrowClick}>
         <img src={RightArrow} alt="Right arrow button" />
       </button>
     </div>

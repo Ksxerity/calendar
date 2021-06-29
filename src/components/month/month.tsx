@@ -10,7 +10,7 @@ let selectedDate: ISelectedDate;
 let dispatch: AppDispatch;
 let daysInMonth: Array<Array<util.DayType>>;
 
-const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
   const style = event.currentTarget.getAttribute('style');
   const newDate = { ...selectedDate };
   newDate.day = parseInt(event.currentTarget.innerHTML, 10);
@@ -46,9 +46,8 @@ const Week = ({ dates, last }: WeekProps): JSX.Element => {
   for (let i = 0; i < dates.length; i++) {
     if (last) {
       days.push(
-        <div
-          role="button"
-          tabIndex={0}
+        <button
+          type="button"
           style={{ color: `${dates[i].color}` }}
           className={[
             styles.day,
@@ -58,13 +57,12 @@ const Week = ({ dates, last }: WeekProps): JSX.Element => {
           onClick={handleClick}
         >
           {dates[i].day}
-        </div>,
+        </button>,
       );
     } else {
       days.push(
-        <div
-          role="button"
-          tabIndex={0}
+        <button
+          type="button"
           style={{ color: `${dates[i].color}` }}
           className={[
             styles.day,
@@ -73,7 +71,7 @@ const Week = ({ dates, last }: WeekProps): JSX.Element => {
           onClick={handleClick}
         >
           {dates[i].day}
-        </div>,
+        </button>,
       );
     }
   }
@@ -96,15 +94,16 @@ const Month = (): JSX.Element => {
   }
   week.push(<Week dates={daysInMonth[daysInMonth.length - 1]} last={true} />);
 
-  if (daysInMonth.length === 5) {
-    return (
-      <div className={styles['month-5']}>
-        {week}
-      </div>
-    );
+  let monthView: string;
+  if (daysInMonth.length === 4) {
+    monthView = styles['month-4'];
+  } else if (daysInMonth.length === 5) {
+    monthView = styles['month-5'];
+  } else {
+    monthView = styles['month-6'];
   }
   return (
-    <div className={styles['month-6']}>
+    <div className={monthView}>
       {week}
     </div>
   );

@@ -1,3 +1,10 @@
+.month-4 {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 100%;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+
 .month-5 {
   display: grid;
   height: 100%;
@@ -19,9 +26,12 @@
 }
 
 .day {
+  border-radius: 10px;
   padding-left: 10px;
   padding-top: 10px;
   font-size: 1.1em;
+  border: none;
+  flex-direction: column;
   background: linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
   +.day {
     background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat,
@@ -33,7 +43,10 @@
       background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat;
     }
   }
+  &:hover {
+    background-color: #e3e3e3 !important;
+  }
   &.selected {
-    background-color: #eeee00 !important;
+    background-color: lightsteelblue !important;
   }
 }

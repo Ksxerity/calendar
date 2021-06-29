@@ -1,9 +1,14 @@
-import { DayType, getMonthArray } from './util';
+import {
+  DayType,
+  getNumberOfDaysInMonth,
+  getMonthArray,
+} from './util';
 
 export type {
   DayType,
 };
 
 export {
+  getNumberOfDaysInMonth,
   getMonthArray,
 };

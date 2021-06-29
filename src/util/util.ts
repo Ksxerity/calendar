@@ -5,7 +5,7 @@ function leapYear(year: number): number {
   return 28;
 }
 
-function getNumberOfDaysInMonth(month: number, year: number): number {
+export function getNumberOfDaysInMonth(month: number, year: number): number {
   let days = 0;
   switch (month) {
     case 0:
