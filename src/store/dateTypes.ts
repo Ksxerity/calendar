@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 export interface IDateEvent {
   id: number,
   name: string,

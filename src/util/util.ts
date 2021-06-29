@@ -30,24 +30,48 @@ function getNumberOfDaysInMonth(month: number, year: number): number {
   return days;
 }
 
-export const getMonthArray = (month: number, year: number): Array<Array<number>> => {
+export type DayType = {
+  // Previous month days: GRAY
+  // Current month days: BLACK
+  // Holidays in current month
+  color: string,
+  day: number,
+};
+
+export const getMonthArray = (month: number, year: number): Array<Array<DayType>> => {
   const daysInMonth = getNumberOfDaysInMonth(month, year);
   const firstDayOfMonth = new Date(year, month, 1);
   const dayOne = firstDayOfMonth.getDay();
-  const dayArray: Array<Array<number>> = [[]];
+  const dayArray: Array<Array<DayType>> = [[]];
   let index = 0;
-  for (let i = 0; i < dayOne; i++) {
-    dayArray[index].push(0);
+
+  // Populating days before the 1st of the month with the last few days of the previous month
+  let daysInPrevMonth;
+  if (month === 0) {
+    daysInPrevMonth = getNumberOfDaysInMonth(11, year - 1) - dayOne + 1;
+  } else {
+    daysInPrevMonth = getNumberOfDaysInMonth(month - 1, year) - dayOne + 1;
   }
+  for (let i = 0; i < dayOne; i++) {
+    dayArray[index].push({ color: 'gray', day: daysInPrevMonth });
+    daysInPrevMonth += 1;
+  }
+
+  // Populating the days of the current month
   for (let i = 1; i <= daysInMonth; i++) {
     if (dayArray[index].length === 7) {
       dayArray.push([]);
       index += 1;
     }
-    dayArray[index].push(i);
+    dayArray[index].push({ color: 'black', day: i });
   }
+
+  // Populating the days after the end of the current month with the first few days
+  // of the next month
+  let count = 1;
   while (dayArray[index].length !== 7) {
-    dayArray[index].push(0);
+    dayArray[index].push({ color: 'gray', day: count });
+    count += 1;
   }
   return dayArray;
 };

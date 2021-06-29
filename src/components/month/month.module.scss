@@ -7,6 +7,9 @@
 
 .month-6 {
   display: grid;
+  height: 100%;
+  grid-template-columns: 100%;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
 }
 
 .week {
@@ -16,5 +19,21 @@
 }
 
 .day {
-  border: 2px groove lightgray;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 1.1em;
+  background: linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
+  +.day {
+    background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat,
+    linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
+  }
+  &.last {
+    background: none;
+    +.day {
+      background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat;
+    }
+  }
+  &.selected {
+    background-color: #eeee00 !important;
+  }
 }

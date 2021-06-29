@@ -28,6 +28,4 @@ const Home = () => {
   );
 };
 
-// https://stackoverflow.com/questions/36735698/extended-borders-with-css
-
 export default Home;

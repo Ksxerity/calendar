@@ -37,8 +37,15 @@
       }
     },
     "rules": {
+      "@typescript-eslint/ban-types": [
+        0
+      ],
       "react/jsx-uses-react": "error",
       "react/jsx-uses-vars": "error",
+      "react/jsx-boolean-value": [
+        2,
+        "always"
+      ],
       "no-plusplus": [
         2,
         {
@@ -58,6 +65,9 @@
         {
           "props": false
         }
+      ],
+      "jsx-a11y/click-events-have-key-events": [
+        0
       ]
     },
     "env": {
