@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/ban-types */
 export interface IDateEvent {
   id: number,
   name: string,
@@ -15,7 +15,6 @@ export interface ISelectedDate {
 }
 
 export type DateState = {
-  date: object,
   selectedDate: ISelectedDate,
   events: IDateEvent[]
 }

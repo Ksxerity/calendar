@@ -1,16 +1,15 @@
 import React from 'react';
-import propTypes from 'prop-types';
 
-Action.propTypes = {
-  src: propTypes.String
-}
+type ActionProps = {
+  src: string
+};
 
-function Action(props) {
+const Action = ({ src }: ActionProps) => {
   return (
-    <a>
-      <img src={props.src}></img>
-    </a>
-  )
-}
+    <button type="button">
+      <img src={src} alt="Action icon" />
+    </button>
+  );
+};
 
 export default Action;

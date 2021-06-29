@@ -22,26 +22,48 @@
   },
   "eslintConfig": {
     "plugins": [
-      "react"
+      "react",
+      "@typescript-eslint"
     ],
-    "parser": "babel-eslint",
+    "extends": [
+      "airbnb-typescript",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended"
+    ],
     "parserOptions": {
+      "project": "./tsconfig.json",
       "ecmaFeatures": {
         "jsx": true
       }
     },
     "rules": {
       "react/jsx-uses-react": "error",
-      "react/jsx-uses-vars": "error"
+      "react/jsx-uses-vars": "error",
+      "no-plusplus": [
+        2,
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
+      "import/prefer-default-export": 0,
+      "arrow-body-style": [
+        0,
+        "as-needed",
+        {
+          "requireReturnForObjectLiteral": false
+        }
+      ],
+      "no-param-reassign": [
+        "error",
+        {
+          "props": false
+        }
+      ]
     },
     "env": {
       "browser": true,
       "node": true
     },
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended"
-    ],
     "settings": {
       "react": {
         "createClass": "createReactClass",
@@ -85,7 +107,9 @@
     "@types/node": "^15.12.5",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
     "eslint": "^7.29.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-plugin-react": "^7.24.0",
     "typescript": "^4.3.4"
   }

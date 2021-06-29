@@ -1,11 +1,20 @@
-.month {
+.month-5 {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 100%;
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+}
+
+.month-6 {
   display: grid;
 }
 
-.week-five {
-  
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: 100%;
 }
 
-.week-six {
-
+.day {
+  border: 2px groove lightgray;
 }

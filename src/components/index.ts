@@ -9,5 +9,5 @@ export {
   Day,
   Month,
   Selector,
-  Week
-}
+  Week,
+};

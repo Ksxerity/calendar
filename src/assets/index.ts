@@ -3,5 +3,5 @@ import RightArrow from './right-arrow.png';
 
 export {
   LeftArrow,
-  RightArrow
-}
+  RightArrow,
+};

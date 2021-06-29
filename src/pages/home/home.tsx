@@ -12,21 +12,21 @@ const Home = () => {
   return (
     <div className={styles.home}>
       <div className={styles.actions}>
-        <div className={styles.circle}></div>
-        <div className={styles.circle}></div>
-        <div className={styles.circle}></div>
-        <div className={styles.circle}></div>
-        <div className={styles.circle}></div>
+        <div className={styles.circle} />
+        <div className={styles.circle} />
+        <div className={styles.circle} />
+        <div className={styles.circle} />
+        <div className={styles.circle} />
       </div>
       <div className={styles['month-selector']}>
-        <Selector></Selector>
+        <Selector />
       </div>
       <div className={styles.calendar}>
-        <Month></Month>
+        <Month />
       </div>
     </div>
-  )
-}
+  );
+};
 
 // https://stackoverflow.com/questions/36735698/extended-borders-with-css
 
