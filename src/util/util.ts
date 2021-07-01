@@ -1,3 +1,5 @@
+import { ISelectedDate } from '../store/dateTypes';
+
 function leapYear(year: number): number {
   if (year % 4 === 0) {
     return 29;
@@ -39,14 +41,14 @@ export type DayType = {
 };
 
 export const getMonthArray = (month: number, year: number): Array<Array<DayType>> => {
-  const daysInMonth = getNumberOfDaysInMonth(month, year);
-  const firstDayOfMonth = new Date(year, month, 1);
-  const dayOne = firstDayOfMonth.getDay();
+  const daysInMonth: number = getNumberOfDaysInMonth(month, year);
+  const firstDayOfMonth: Date = new Date(year, month, 1);
+  const dayOne: number = firstDayOfMonth.getDay();
   const dayArray: Array<Array<DayType>> = [[]];
   let index = 0;
 
   // Populating days before the 1st of the month with the last few days of the previous month
-  let daysInPrevMonth;
+  let daysInPrevMonth: number;
   if (month === 0) {
     daysInPrevMonth = getNumberOfDaysInMonth(11, year - 1) - dayOne + 1;
   } else {
@@ -74,4 +76,13 @@ export const getMonthArray = (month: number, year: number): Array<Array<DayType>
     count += 1;
   }
   return dayArray;
+};
+
+export const getCurrentDate = (): ISelectedDate => {
+  const dateObject: ISelectedDate = {
+    month: new Date().getMonth(),
+    day: new Date().getDate(),
+    year: new Date().getFullYear(),
+  };
+  return dateObject;
 };

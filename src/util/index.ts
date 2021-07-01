@@ -2,6 +2,7 @@ import {
   DayType,
   getNumberOfDaysInMonth,
   getMonthArray,
+  getCurrentDate,
 } from './util';
 
 export type {
@@ -11,4 +12,5 @@ export type {
 export {
   getNumberOfDaysInMonth,
   getMonthArray,
+  getCurrentDate,
 };

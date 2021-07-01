@@ -1,4 +1,9 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { selectNewDate } from '../../store/dateSlice';
+import { ISelectedDate } from '../../store/dateTypes';
+import * as util from '../../util';
 import {
   CalendarViewIcon,
   JumpToNowIcon,
@@ -6,6 +11,24 @@ import {
   SettingsIcon,
 } from '../../assets';
 import styles from './actions.module.scss';
+
+let dispatch: AppDispatch;
+
+const returnToCurrentDate = (): void => {
+  const dateObject: ISelectedDate = util.getCurrentDate();
+  dispatch(selectNewDate(dateObject));
+};
+
+const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  const { id } = event.currentTarget;
+  switch (id) {
+    case 'JumpToNow':
+      returnToCurrentDate();
+      break;
+    default:
+      break;
+  }
+};
 
 type ActionButtonProps = {
   src: string,
@@ -16,21 +39,37 @@ type ActionButtonProps = {
 const ActionButton = (props: ActionButtonProps): JSX.Element => {
   const { src, id, alt } = props;
   return (
-    <button type="button" id={id} className={styles['action-icon']}>
+    <button type="button" id={id} data-tooltip={alt} className={styles['action-icon']} onClick={handleClick}>
       <img src={src} alt={alt} className={styles.icon} />
     </button>
   );
 };
 
+const populateCurrentDateLabel = (): string => {
+  const currentDate: Date = new Date();
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  };
+  const dateLabel: string = currentDate.toLocaleString('default', options);
+  const weekdayLabel: string = currentDate.toLocaleString('default', { weekday: 'long' });
+  return `${weekdayLabel} ${dateLabel}`;
+};
+
 const Actions = (): JSX.Element => {
+  dispatch = useDispatch<AppDispatch>();
+
   return (
     <div className={styles.container}>
-      <div>TIME GOES HERE</div>
+      <div className={styles.date}>
+        {populateCurrentDateLabel()}
+      </div>
       <div className={styles.actions}>
-        <ActionButton src={NewEventIcon} id="NewEvent" alt="New Event Action" />
-        <ActionButton src={JumpToNowIcon} id="JumpToNow" alt="Nump To Current Date Action" />
-        <ActionButton src={CalendarViewIcon} id="CalendarView" alt="Change Calendar View Action" />
-        <ActionButton src={SettingsIcon} id="Settings" alt="Settings Action" />
+        <ActionButton src={NewEventIcon} id="NewEvent" alt="Create New Event" />
+        <ActionButton src={JumpToNowIcon} id="JumpToNow" alt="Jump To Current Date" />
+        <ActionButton src={CalendarViewIcon} id="CalendarView" alt="Change Calendar View" />
+        <ActionButton src={SettingsIcon} id="Settings" alt="Settings" />
       </div>
     </div>
   );

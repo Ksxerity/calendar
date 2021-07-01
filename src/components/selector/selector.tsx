@@ -18,7 +18,7 @@ const handleMonthClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
 };
 
 const handleArrowClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-  const newDate = { ...selectedDate };
+  const newDate: ISelectedDate = { ...selectedDate };
   if (event.currentTarget.id === 'prev') {
     if (newDate.month === 0) {
       newDate.month = 11;
@@ -32,14 +32,14 @@ const handleArrowClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
   } else {
     newDate.month += 1;
   }
-  const numberOfDaysInNewMonth = util.getNumberOfDaysInMonth(newDate.month, newDate.year);
+  const numberOfDaysInNewMonth: number = util.getNumberOfDaysInMonth(newDate.month, newDate.year);
   newDate.day = newDate.day > numberOfDaysInNewMonth ? numberOfDaysInNewMonth : newDate.day;
   dispatch(selectNewDate(newDate));
 };
 
 const populateMonthLabel = (): string => {
-  const currentDate = new Date(selectedDate.year, selectedDate.month, selectedDate.day);
-  let monthLabel = currentDate.toLocaleString('default', { month: 'long' });
+  const currentDate: Date = new Date(selectedDate.year, selectedDate.month, selectedDate.day);
+  let monthLabel: string = currentDate.toLocaleString('default', { month: 'long' });
   if (selectedDate.year !== new Date().getFullYear()) {
     monthLabel = `${monthLabel} ${selectedDate.year}`;
   }

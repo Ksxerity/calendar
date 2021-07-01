@@ -1,12 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IDateEvent, ISelectedDate, DateState } from './dateTypes';
+import * as util from '../util';
 
 const initialState: DateState = {
-  selectedDate: {
-    month: new Date().getMonth(),
-    day: new Date().getDate(),
-    year: new Date().getFullYear(),
-  },
+  selectedDate: util.getCurrentDate(),
   events: [],
 };
 
@@ -26,7 +23,7 @@ const dateSlice = createSlice({
       state.events.push(action.payload);
     },
     removeDateEvent: (state, action: PayloadAction<number>) => {
-      const index = state.events.findIndex((element) => element.id === action.payload);
+      const index: number = state.events.findIndex((element) => element.id === action.payload);
       state.events.splice(index, 1);
     },
   },

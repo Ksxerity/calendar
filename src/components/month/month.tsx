@@ -11,11 +11,11 @@ let dispatch: AppDispatch;
 let daysInMonth: Array<Array<util.DayType>>;
 
 const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-  const style = event.currentTarget.getAttribute('style');
-  const newDate = { ...selectedDate };
+  const style: string = (event.currentTarget.getAttribute('style') || '');
+  const newDate: ISelectedDate = { ...selectedDate };
   newDate.day = parseInt(event.currentTarget.innerHTML, 10);
   if (style) {
-    let color = style.split(':')[1].trim();
+    let color: string = style.split(':')[1].trim();
     color = color.slice(0, color.length - 1);
     if (color === 'gray') {
       if (newDate.day > 15) {
@@ -42,7 +42,7 @@ type WeekProps = {
 };
 
 const Week = ({ dates, last }: WeekProps): JSX.Element => {
-  const days = [];
+  const days: Array<JSX.Element> = [];
   for (let i = 0; i < dates.length; i++) {
     if (last) {
       days.push(
@@ -88,7 +88,7 @@ const Month = (): JSX.Element => {
   dispatch = useDispatch<AppDispatch>();
   daysInMonth = util.getMonthArray(selectedDate.month, selectedDate.year);
 
-  const week = [];
+  const week: Array<JSX.Element> = [];
   for (let i = 0; i < daysInMonth.length - 1; i++) {
     week.push(<Week dates={daysInMonth[i]} last={false} />);
   }
