@@ -6,8 +6,8 @@ import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
 import styles from './selector.module.scss';
 import {
-  LeftArrow,
-  RightArrow,
+  LeftArrowIcon,
+  RightArrowIcon,
 } from '../../assets';
 
 let selectedDate: ISelectedDate;
@@ -52,14 +52,14 @@ const Selector = (): JSX.Element => {
 
   return (
     <div className={styles.selector}>
-      <button id="prev" type="button" className={styles['select-prev']} onClick={handleArrowClick}>
-        <img src={LeftArrow} alt="Left arrow button" />
+      <button id="prev" type="button" className={styles['arrow-button']} onClick={handleArrowClick}>
+        <img src={LeftArrowIcon} alt="Left arrow button" className={styles['arrow-icon']} />
       </button>
       <button type="button" className={styles['select-month']} onClick={handleMonthClick}>
         {populateMonthLabel()}
       </button>
-      <button id="next" type="button" className={styles['select-next']} onClick={handleArrowClick}>
-        <img src={RightArrow} alt="Right arrow button" />
+      <button id="next" type="button" className={styles['arrow-button']} onClick={handleArrowClick}>
+        <img src={RightArrowIcon} alt="Right arrow button" className={styles['arrow-icon']} />
       </button>
     </div>
   );

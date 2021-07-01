@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  .time {
+
+  }
+  .actions {
+    .action-icon {
+      border: none;
+      background: transparent;
+      .icon {
+        max-height: 4vh;
+        max-width: 4vh;
+        border-radius: 50%;
+        border: 3px solid lightblue;
+        background-color: transparent;
+        padding: .2rem;
+        &:hover {
+          background-color: #e3e3e3;
+        }
+      }
+    }
+  }
+}
