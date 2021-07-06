@@ -82,6 +82,12 @@ const handleArrowClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
 const populateMonthLabel = (): string => {
   const currentDate: Date = new Date(selectedDate.year, selectedDate.month, selectedDate.day);
   let monthLabel: string = currentDate.toLocaleString('default', { month: 'long' });
+  if (calendarView === 'day') {
+    monthLabel = `${monthLabel} ${selectedDate.day}`;
+    if (selectedDate.year !== new Date().getFullYear()) {
+      monthLabel = `${monthLabel},`;
+    }
+  }
   if (selectedDate.year !== new Date().getFullYear()) {
     monthLabel = `${monthLabel} ${selectedDate.year}`;
   }

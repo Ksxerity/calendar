@@ -10,7 +10,8 @@ export interface IDateEvent {
 export interface ISelectedDate {
   month: number,
   day: number,
-  year: number
+  year: number,
+  hour: number
 }
 
 export type DateState = {

@@ -1,0 +1,25 @@
+.container {
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  grid-template-rows: 100%;
+  .hour {
+    border-radius: 10px;
+    padding-top: 10px;
+    font-size: 1.5vw;
+    margin-right: -2px;
+    border: none;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    +.hour {
+      background: linear-gradient(lightgray, lightgray) left / 2px 90% no-repeat;
+    }
+    &:hover {
+      background-color: #e3e3e3 !important;
+    }
+    &.selected {
+      background-color: lightsteelblue !important;
+    }
+  }
+}

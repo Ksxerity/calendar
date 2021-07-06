@@ -113,10 +113,12 @@ export const getWeekArray = (day: number, month: number, year: number): Array<Da
 };
 
 export const getCurrentDate = (): ISelectedDate => {
+  const date: Date = new Date();
   const dateObject: ISelectedDate = {
-    month: new Date().getMonth(),
-    day: new Date().getDate(),
-    year: new Date().getFullYear(),
+    month: date.getMonth(),
+    day: date.getDate(),
+    year: date.getFullYear(),
+    hour: date.getHours(),
   };
   return dateObject;
 };
