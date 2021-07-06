@@ -57,6 +57,13 @@ const Week = (): JSX.Element => {
   const daysInWeek: Array<util.DayType> = util.getWeekArray(selectedDate.day, selectedDate.month, selectedDate.year);
 
   const week: Array<JSX.Element> = [];
+  week.push(<div className={styles['day-of-week']}>Sunday</div>);
+  week.push(<div className={styles['day-of-week']}>Monday</div>);
+  week.push(<div className={styles['day-of-week']}>Tuesday</div>);
+  week.push(<div className={styles['day-of-week']}>Wednesday</div>);
+  week.push(<div className={styles['day-of-week']}>Thursday</div>);
+  week.push(<div className={styles['day-of-week']}>Friday</div>);
+  week.push(<div className={styles['day-of-week']}>Saturday</div>);
   for (let i = 0; i < daysInWeek.length; i++) {
     week.push(<Day date={daysInWeek[i]} />);
   }

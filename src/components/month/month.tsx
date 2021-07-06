@@ -12,7 +12,7 @@ let dispatch: AppDispatch;
 const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
   const style: string = (event.currentTarget.getAttribute('style') || '');
   const newDate: ISelectedDate = { ...selectedDate };
-  newDate.day = parseInt(event.currentTarget.innerHTML, 10);
+  newDate.day = parseInt(event.currentTarget.children[0].innerHTML, 10);
   if (style) {
     let color: string = style.split(':')[1].trim();
     color = color.slice(0, color.length - 1);
@@ -51,7 +51,11 @@ const Week = ({ dates, last }: WeekProps): JSX.Element => {
           ].join(' ')}
           onClick={handleClick}
         >
-          {dates[i].day}
+          <div className={styles.date}>
+            {dates[i].day}
+          </div>
+          <div className={styles.event}>Event 1 with a super long name</div>
+          <div className={styles.event}>Event 2</div>
         </button>,
       );
     } else {
@@ -65,7 +69,9 @@ const Week = ({ dates, last }: WeekProps): JSX.Element => {
           ].join(' ')}
           onClick={handleClick}
         >
-          {dates[i].day}
+          <div className={styles.date}>
+            {dates[i].day}
+          </div>
         </button>,
       );
     }
@@ -84,6 +90,17 @@ const Month = (): JSX.Element => {
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate.month, selectedDate.year);
 
   const week: Array<JSX.Element> = [];
+  week.push(
+    <div className={styles['days-of-week']}>
+      <div>Sunday</div>
+      <div>Monday</div>
+      <div>Tuesday</div>
+      <div>Wednesday</div>
+      <div>Thursday</div>
+      <div>Friday</div>
+      <div>Saturday</div>
+    </div>,
+  );
   for (let i = 0; i < daysInMonth.length - 1; i++) {
     week.push(<Week dates={daysInMonth[i]} last={false} />);
   }

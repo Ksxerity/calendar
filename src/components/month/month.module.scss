@@ -2,21 +2,21 @@
   display: grid;
   height: 100%;
   grid-template-columns: 100%;
-  grid-template-rows: repeat(4, minmax(0, 1fr));
+  grid-template-rows: 3% repeat(4, minmax(0, 1fr));
 }
 
 .month-5 {
   display: grid;
   height: 100%;
   grid-template-columns: 100%;
-  grid-template-rows: repeat(5, minmax(0, 1fr));
+  grid-template-rows: 3% repeat(5, minmax(0, 1fr));
 }
 
 .month-6 {
   display: grid;
   height: 100%;
   grid-template-columns: 100%;
-  grid-template-rows: repeat(6, minmax(0, 1fr));
+  grid-template-rows: 3% repeat(6, minmax(0, 1fr));
 }
 
 .week {
@@ -25,13 +25,23 @@
   grid-template-rows: 100%;
 }
 
+.days-of-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: 100%;
+  text-align: center;
+}
+
 .day {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 26% repeat(6, minmax(0, 1fr));
   border-radius: 10px;
-  padding-left: 10px;
-  padding-top: 10px;
+  padding: 0;
   font-size: 1.5vw;
+  text-align: left;
   border: none;
-  flex-direction: column;
+  overflow: hidden;
   background: linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
   +.day {
     background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat,
@@ -48,5 +58,14 @@
   }
   &.selected {
     background-color: lightsteelblue !important;
+  }
+  .date {
+    padding-left: 10px;
+    padding-top: 5px;
+  }
+  .event {
+    white-space: nowrap;
+    font-size: .9vw;
+    padding-left: 4px;
   }
 }
