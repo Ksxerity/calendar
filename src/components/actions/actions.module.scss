@@ -5,7 +5,7 @@
   height: 100%;
   .date {
     font-size: 2vw;
-    color: gray;
+    color: #34495e;
   }
   .actions {
     .action-icon {
@@ -16,7 +16,7 @@
         max-height: 4vh;
         max-width: 4vh;
         border-radius: 50%;
-        border: 3px solid lightblue;
+        border: 3px solid #63b0e3;
         background-color: transparent;
         padding: .2rem;
         &:hover {
@@ -26,15 +26,16 @@
       &::before {
         content: attr(data-tooltip);
         position: absolute;
-        font-size: .8vw;
-        width: 4vw;
+        font-size: calc(8px + (16 - 8) * ((100vw - 200px) / (1600 - 200)));
+        width: 4em;
         top: 100%;
-        left: -20%;
+        left: calc(-.7em);
         padding: .5em;
         border-radius: 10px;
         background-color: rgb(224, 224, 224);
         text-align: center;
         display: none;
+        pointer-events: none;
       }
       &:hover::before {
         display: block;

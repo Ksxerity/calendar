@@ -68,6 +68,12 @@
       ],
       "jsx-a11y/click-events-have-key-events": [
         0
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 120
+        }
       ]
     },
     "env": {

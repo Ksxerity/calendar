@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { selectNewDate } from '../../store/dateSlice';
+import { changeCalendarView, selectNewDate } from '../../store/dateSlice';
 import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
 import {
@@ -24,6 +24,9 @@ const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
   switch (id) {
     case 'JumpToNow':
       returnToCurrentDate();
+      break;
+    case 'CalendarView':
+      dispatch(changeCalendarView());
       break;
     default:
       break;

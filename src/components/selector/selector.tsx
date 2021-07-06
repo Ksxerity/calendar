@@ -11,6 +11,7 @@ import {
 } from '../../assets';
 
 let selectedDate: ISelectedDate;
+let calendarView: string;
 let dispatch: AppDispatch;
 
 const handleMonthClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -19,21 +20,62 @@ const handleMonthClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
 
 const handleArrowClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
   const newDate: ISelectedDate = { ...selectedDate };
-  if (event.currentTarget.id === 'prev') {
-    if (newDate.month === 0) {
-      newDate.month = 11;
-      newDate.year -= 1;
-    } else {
-      newDate.month -= 1;
+  if (calendarView === 'month') {
+    if (event.currentTarget.id === 'prev') {
+      const { month, year } = util.calculatePrevMonthAndYear(newDate.month, newDate.year);
+      newDate.month = month;
+      newDate.year = year;
+    } else if (event.currentTarget.id === 'next') {
+      const { month, year } = util.calculateNextMonthAndYear(newDate.month, newDate.year);
+      newDate.month = month;
+      newDate.year = year;
     }
-  } else if (newDate.month === 11) {
-    newDate.month = 0;
-    newDate.year += 1;
-  } else {
-    newDate.month += 1;
+    const numberOfDaysInNewMonth: number = util.getNumberOfDaysInMonth(newDate.month, newDate.year);
+    newDate.day = newDate.day > numberOfDaysInNewMonth ? numberOfDaysInNewMonth : newDate.day;
+  } else if (calendarView === 'week') {
+    if (event.currentTarget.id === 'prev') {
+      if (newDate.day - 7 < 1) {
+        const { month, year } = util.calculatePrevMonthAndYear(newDate.month, newDate.year);
+        newDate.month = month;
+        newDate.year = year;
+        newDate.day -= 7;
+        newDate.day += util.getNumberOfDaysInMonth(month, year);
+      } else {
+        newDate.day -= 7;
+      }
+    } else if (event.currentTarget.id === 'next') {
+      const currDaysInMonth: number = util.getNumberOfDaysInMonth(newDate.month, newDate.year);
+      if (newDate.day + 7 > currDaysInMonth) {
+        const { month, year } = util.calculateNextMonthAndYear(newDate.month, newDate.year);
+        newDate.month = month;
+        newDate.year = year;
+        newDate.day += 7;
+        newDate.day -= currDaysInMonth;
+      } else {
+        newDate.day += 7;
+      }
+    }
+  } else if (calendarView === 'day') {
+    if (event.currentTarget.id === 'prev') {
+      if (newDate.day === 1) {
+        const { month, year } = util.calculatePrevMonthAndYear(newDate.month, newDate.year);
+        newDate.month = month;
+        newDate.year = year;
+        newDate.day = util.getNumberOfDaysInMonth(month, year);
+      } else {
+        newDate.day -= 1;
+      }
+    } else if (event.currentTarget.id === 'next') {
+      if (newDate.day === util.getNumberOfDaysInMonth(newDate.month, newDate.year)) {
+        newDate.day = 1;
+        const { month, year } = util.calculateNextMonthAndYear(newDate.month, newDate.year);
+        newDate.month = month;
+        newDate.year = year;
+      } else {
+        newDate.day += 1;
+      }
+    }
   }
-  const numberOfDaysInNewMonth: number = util.getNumberOfDaysInMonth(newDate.month, newDate.year);
-  newDate.day = newDate.day > numberOfDaysInNewMonth ? numberOfDaysInNewMonth : newDate.day;
   dispatch(selectNewDate(newDate));
 };
 
@@ -48,6 +90,7 @@ const populateMonthLabel = (): string => {
 
 const Selector = (): JSX.Element => {
   selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  calendarView = useSelector((state: RootState) => state.date.calendarView);
   dispatch = useDispatch<AppDispatch>();
 
   return (

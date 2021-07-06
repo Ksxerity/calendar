@@ -4,6 +4,7 @@ import * as util from '../util';
 
 const initialState: DateState = {
   selectedDate: util.getCurrentDate(),
+  calendarView: 'month',
   events: [],
 };
 
@@ -11,6 +12,15 @@ const dateSlice = createSlice({
   name: 'date',
   initialState,
   reducers: {
+    changeCalendarView: (state) => {
+      if (state.calendarView === 'month') {
+        state.calendarView = 'week';
+      } else if (state.calendarView === 'week') {
+        state.calendarView = 'day';
+      } else {
+        state.calendarView = 'month';
+      }
+    },
     selectNewDate: (state, action: PayloadAction<ISelectedDate>) => {
       state.selectedDate = action.payload;
     },
@@ -30,6 +40,7 @@ const dateSlice = createSlice({
 });
 
 export const {
+  changeCalendarView,
   selectNewDate,
   addDateEvent,
   removeDateEvent,

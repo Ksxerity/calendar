@@ -1,7 +1,7 @@
 .selector {
   height: 100%;
   width: 75%;
-  border-top: 2px groove lightgray;
+  border-top: 2px groove #BDC3C7;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -23,6 +23,7 @@
     background-color: transparent;
     padding: 10px;
     font-size: 3vw;
+    color: #34495e;
     &:hover {
       background-color: #e3e3e3;
     }

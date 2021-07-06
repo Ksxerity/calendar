@@ -1,8 +1,11 @@
 import {
   DayType,
   getNumberOfDaysInMonth,
+  getWeekArray,
   getMonthArray,
   getCurrentDate,
+  calculateNextMonthAndYear,
+  calculatePrevMonthAndYear,
 } from './util';
 
 export type {
@@ -11,6 +14,9 @@ export type {
 
 export {
   getNumberOfDaysInMonth,
+  getWeekArray,
   getMonthArray,
   getCurrentDate,
+  calculateNextMonthAndYear,
+  calculatePrevMonthAndYear,
 };

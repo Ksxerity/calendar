@@ -15,5 +15,6 @@ export interface ISelectedDate {
 
 export type DateState = {
   selectedDate: ISelectedDate,
+  calendarView: string,
   events: IDateEvent[]
 }

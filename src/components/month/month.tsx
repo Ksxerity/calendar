@@ -8,7 +8,6 @@ import styles from './month.module.scss';
 
 let selectedDate: ISelectedDate;
 let dispatch: AppDispatch;
-let daysInMonth: Array<Array<util.DayType>>;
 
 const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
   const style: string = (event.currentTarget.getAttribute('style') || '');
@@ -86,7 +85,7 @@ const Week = ({ dates, last }: WeekProps): JSX.Element => {
 const Month = (): JSX.Element => {
   selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   dispatch = useDispatch<AppDispatch>();
-  daysInMonth = util.getMonthArray(selectedDate.month, selectedDate.year);
+  const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate.month, selectedDate.year);
 
   const week: Array<JSX.Element> = [];
   for (let i = 0; i < daysInMonth.length - 1; i++) {
