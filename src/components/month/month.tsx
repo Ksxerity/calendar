@@ -54,8 +54,8 @@ const Week = ({ dates, last }: WeekProps): JSX.Element => {
           <div className={styles.date}>
             {dates[i].day}
           </div>
-          <div className={styles.event}>Event 1 with a super long name</div>
-          <div className={styles.event}>Event 2</div>
+          {/* <div className={styles.event}>Event 1 with a super long name</div>
+          <div className={styles.event}>Event 2</div> */}
         </button>,
       );
     } else {

@@ -27,9 +27,9 @@
         content: attr(data-tooltip);
         position: absolute;
         font-size: calc(8px + (16 - 8) * ((100vw - 200px) / (1600 - 200)));
-        width: 4em;
+        width: 5em;
         top: 100%;
-        left: calc(-.7em);
+        left: calc(-1em);
         padding: .5em;
         border-radius: 10px;
         background-color: rgb(224, 224, 224);
