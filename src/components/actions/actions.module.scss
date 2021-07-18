@@ -43,3 +43,40 @@
     }
   }
 }
+
+.modal-dialog {
+  .form-name {
+    margin-bottom: 10px;
+    .input-error {
+      ~ label {
+        &::after {
+          content: " (Invalid Year (Do not precede 1970))";
+        }
+      }
+    }
+  }
+  .form-duration {
+    display: flex;
+    flex-direction: row;
+    .duration-type {
+      padding-left: 5px;
+    }
+    .duration-section {
+      display: flex;
+      flex-direction: column;
+    }
+    .separator {
+      margin-left: 2px;
+      margin-right: 2px;
+      border-right: 2px groove lightgray;
+    }
+  }
+  .form-color {
+
+  }
+  .form-repeating {
+
+  }
+}
+
+

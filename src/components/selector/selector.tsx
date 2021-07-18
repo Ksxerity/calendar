@@ -121,13 +121,13 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
   return (
     <Modal show={show} onHide={handleClose} dialogClassName={styles['modal-dialog']}>
       <Modal.Header>
-        <form noValidate={true}>
-          <div className={['form-group', styles.year].join(' ')}>
+        <form noValidate={true} onSubmit={(e) => e.preventDefault()} autoComplete="off">
+          <div className={['form-group', 'form-input'].join(' ')}>
             <input
               type="number"
               id="yearInput"
               name="year"
-              className={['form-group', yearError ? styles['year-input-error'] : null].join(' ')}
+              className={['form-group', yearError ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
               placeholder="Year"
               onChange={(event) => setYearValue(event.currentTarget.value)}
               value={yearValue}
