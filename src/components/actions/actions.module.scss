@@ -12,9 +12,10 @@
       position: relative;
       border: none;
       background: transparent;
+      padding: 3px;
       .icon {
-        max-height: 4vh;
-        max-width: 4vh;
+        max-height: 5vh;
+        max-width: 5vh;
         border-radius: 50%;
         border: 3px solid #63b0e3;
         background-color: transparent;
@@ -45,37 +46,117 @@
 }
 
 .modal-dialog {
-  .form-name {
-    margin-bottom: 10px;
-    .input-error {
-      ~ label {
-        &::after {
-          content: " (Invalid Year (Do not precede 1970))";
+  .modal-body {
+    padding-top: 3px;
+    .form-name {
+      .input-error {
+        ~ label {
+          &::after {
+            content: " (Invalid Year (Do not precede 1970))";
+          }
         }
       }
     }
-  }
-  .form-duration {
-    display: flex;
-    flex-direction: row;
-    .duration-type {
-      padding-left: 5px;
+    .form-duration {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: row;
+      .duration-section {
+        display: flex;
+        flex-direction: column;
+        .duration-type {
+          padding-left: 5px;
+        }
+        .duration-time {
+          display: flex;
+          flex-direction: row;
+        }
+        .duration-date {
+          display: flex;
+          flex-direction: row;
+          .day {
+            width: 50%;
+          }
+          .year {
+            width: 75%;
+          }
+        }
+      }
+      .separator {
+        margin-left: 2px;
+        margin-right: 2px;
+        border-right: 2px groove lightgray;
+      }
     }
-    .duration-section {
+    .form-color {
+      margin-top: 20px;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      .color-selection {
+        display: flex;
+        flex-direction: row;
+        .color-button {
+          margin-right: 3px;
+          height: 30px;
+          width: 30px;
+          border: 3px;
+          border-radius: 50%;
+          border-color: transparent;
+          &.green {
+            background-color: #29BF12;
+          }
+          &.lightgreen {
+            background-color: #ABFF4F;
+          }
+          &.blue {
+            background-color: #08BDBD;
+          }
+          &.red {
+            background-color: #F21B3F;
+          }
+          &.orange {
+            background-color: #FF9914;
+          }
+          &.selected {
+            border-style: solid;
+            border-color: #3498DB;
+          }
+        }
+      }
     }
-    .separator {
-      margin-left: 2px;
-      margin-right: 2px;
-      border-right: 2px groove lightgray;
+    .form-repeating {
+      margin-top: 20px;
+      input {
+        margin-left: 4px;
+        transform: scale(1.5);
+      }
+      label {
+        padding-left: 5px;
+      }
     }
-  }
-  .form-color {
-
-  }
-  .form-repeating {
-
+    .form-submit {
+      display: flex;
+      justify-content: space-between;
+    }
+    .selection {
+      width: 100%;
+      .selection-label {
+        padding-top: 7px;
+        margin-bottom: -3px;
+        font-size: calc(1.8vh * .75);
+        color: #34495e;
+      }
+      select {
+        width: 100%;
+        border: 0;
+        border-bottom: 2px;
+        border-style: solid;
+        border-color: #34495e;
+        outline: none !important;
+        background-color: white;
+      }
+    }
   }
 }
 

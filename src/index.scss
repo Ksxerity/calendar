@@ -46,10 +46,10 @@ form {
         color: transparent;
       }
       &:not(:placeholder-shown) ~ label {
-        transform: translate(7px , 5px) scale(0.75);
+        transform: translate(7px , 7px) scale(0.75);
       }
       &:not(:placeholder-shown) {
-        padding-top: 15px;
+        padding-top: 24px;
         padding-left: 7px;
       }
       &:focus {
