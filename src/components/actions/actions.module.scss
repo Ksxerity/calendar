@@ -48,15 +48,6 @@
 .modal-dialog {
   .modal-body {
     padding-top: 3px;
-    .form-name {
-      .input-error {
-        ~ label {
-          &::after {
-            content: " (Invalid Year (Do not precede 1970))";
-          }
-        }
-      }
-    }
     .form-duration {
       margin-top: 20px;
       display: flex;
@@ -136,25 +127,44 @@
       }
     }
     .form-submit {
+      margin-top: 20px;
       display: flex;
       justify-content: space-between;
+      .lightgray-button {
+        width: 25%;
+        background-color: white;
+        color: #34495e;
+        border: 2px groove lightgray;
+      }
+      .blue-button {
+        width: 25%;
+        background-color: white;
+        color: #34495e;
+        border: 2px groove #63b0e3;
+      }
     }
     .selection {
       width: 100%;
+      color: #34495e;
+      border-color: #34495e;
       .selection-label {
         padding-top: 7px;
         margin-bottom: -3px;
         font-size: calc(1.8vh * .75);
-        color: #34495e;
+        color: inherit;
       }
       select {
         width: 100%;
         border: 0;
         border-bottom: 2px;
         border-style: solid;
-        border-color: #34495e;
+        border-color: inherit;
         outline: none !important;
         background-color: white;
+      }
+      &.selection-error {
+        color: red !important;
+        border-color: red !important;
       }
     }
   }

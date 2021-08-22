@@ -4,7 +4,7 @@ export interface IDateEvent {
   from: object,
   to: object,
   color: string,
-  repeating: boolean
+  // repeating: boolean
 }
 
 export interface ISelectedDate {
@@ -18,4 +18,4 @@ export type DateState = {
   selectedDate: ISelectedDate,
   calendarView: string,
   events: IDateEvent[]
-}
+};

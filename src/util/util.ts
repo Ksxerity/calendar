@@ -149,3 +149,29 @@ export const calculateNextMonthAndYear = (month: number, year: number): MonthYea
   }
   return obj;
 };
+
+export const isValidYear = (year: number): boolean => {
+  if (Number.isNaN(year)) return false;
+  if (year.toString().includes('.')) return false;
+  if (year < 1970) return false;
+  if (year > 275760) return false;
+  return true;
+};
+
+export const isValidDay = (day: number, month: number, year: number): boolean => {
+  if (Number.isNaN(day)) return false;
+  if (day.toString().includes('.')) return false;
+  if (!isValidYear(year)) return false;
+  if (day < 0) return false;
+  const numberOfDaysInMonth = getNumberOfDaysInMonth(month, year);
+  if (day > numberOfDaysInMonth) return false;
+  return true;
+};
+
+export const isValidHour = (hour: number): boolean => {
+  if (Number.isNaN(hour)) return false;
+  if (hour.toString().includes('.')) return false;
+  if (hour < 0) return false;
+  if (hour > 23) return false;
+  return true;
+};

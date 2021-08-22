@@ -101,20 +101,16 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
   const [yearValue, setYearValue] = useState(`${selectedDate.year}`);
 
   const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    if (yearValue.length !== 4) {
+    const yearVal = parseInt(yearValue, 10);
+    if (!util.isValidYear(yearVal)) {
       setYearError(true);
     } else {
-      const yearVal = parseInt(yearValue, 10);
-      if (yearVal < 1970) {
-        setYearError(true);
-      } else {
-        setYearError(false);
-        const newDate: ISelectedDate = { ...selectedDate };
-        newDate.year = yearVal;
-        newDate.month = parseInt(event.currentTarget.id, 10);
-        dispatch(selectNewDate(newDate));
-        handleClose();
-      }
+      setYearError(false);
+      const newDate: ISelectedDate = { ...selectedDate };
+      newDate.year = yearVal;
+      newDate.month = parseInt(event.currentTarget.id, 10);
+      dispatch(selectNewDate(newDate));
+      handleClose();
     }
   };
 

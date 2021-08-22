@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { changeCalendarView, selectNewDate } from '../../store/dateSlice';
-import { ISelectedDate } from '../../store/dateTypes';
+import { addDateEvent } from '../../store/dateSlice';
 import * as util from '../../util';
 import styles from './actions.module.scss';
 
@@ -16,11 +15,11 @@ type DurationErrors = {
 };
 
 type DurationValues = {
-  minute: number,
-  hour: number,
-  day: number,
-  month: number,
-  year: number,
+  minute: string,
+  hour: string,
+  day: string,
+  month: string,
+  year: string,
 };
 
 type DurationSectionProps = {
@@ -42,12 +41,12 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
     if (name === 'minute') {
       setValue({
         ...values,
-        minute: parseInt(event.target.value, 10),
+        minute: event.target.value,
       });
     } else if (name === 'month') {
       setValue({
         ...values,
-        month: parseInt(event.currentTarget.value, 10),
+        month: event.currentTarget.value,
       });
     }
   };
@@ -68,13 +67,16 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
             placeholder="Hour"
             onChange={(event) => setValue({
               ...values,
-              hour: parseInt(event.currentTarget.value, 10),
+              hour: event.currentTarget.value,
             })}
             value={values.hour}
           />
           <label htmlFor="hour">Hour</label>
         </div>
-        <div className={styles.selection}>
+        <div className={[
+          styles.selection,
+          errors.minute ? styles['selection-error'] : null].join(' ')}
+        >
           <div className={styles['selection-label']}>
             Minute
           </div>
@@ -87,7 +89,10 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
         </div>
       </div>
       <div className={styles['duration-date']}>
-        <div className={[styles.selection].join(' ')}>
+        <div className={[
+          styles.selection,
+          errors.minute ? styles['selection-error'] : null].join(' ')}
+        >
           <div className={styles['selection-label']}>
             Month
           </div>
@@ -116,7 +121,7 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
             placeholder="Day"
             onChange={(event) => setValue({
               ...values,
-              day: parseInt(event.currentTarget.value, 10),
+              day: event.currentTarget.value,
             })}
             value={values.day}
           />
@@ -128,11 +133,11 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
             name="year"
             className={[
               'form-group',
-              errors.hour ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
+              errors.year ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
             placeholder="Year"
             onChange={(event) => setValue({
               ...values,
-              year: parseInt(event.currentTarget.value, 10),
+              year: event.currentTarget.value,
             })}
             value={values.year}
           />
@@ -217,21 +222,175 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
   // Value State
   const [nameValue, setNameValue] = useState('');
   const [fromDurationValue, setFromDurationValue] = useState({
-    minute: 0,
-    hour: selectedDate.hour,
-    day: selectedDate.day,
-    month: selectedDate.month,
-    year: selectedDate.year,
+    minute: '0',
+    hour: `${selectedDate.hour}`,
+    day: `${selectedDate.day}`,
+    month: `${selectedDate.month}`,
+    year: `${selectedDate.year}`,
   });
   const [toDurationValue, setToDurationValue] = useState({
-    minute: 0,
-    hour: selectedDate.hour,
-    day: selectedDate.day,
-    month: selectedDate.month,
-    year: selectedDate.year,
+    minute: '0',
+    hour: `${selectedDate.hour}`,
+    day: `${selectedDate.day}`,
+    month: `${selectedDate.month}`,
+    year: `${selectedDate.year}`,
   });
   const [colorValue, setColorValue] = useState('green');
-  const [repeatingValue, setRepeatingValue] = useState(false);
+  // const [repeatingValue, setRepeatingValue] = useState(false);
+
+  const handleSubmit = (): void => {
+    let validForm = true;
+    // Reset error flags
+    setToDurationError({
+      minute: false,
+      hour: false,
+      day: false,
+      month: false,
+      year: false,
+    });
+    setFromDurationError({
+      minute: false,
+      hour: false,
+      day: false,
+      month: false,
+      year: false,
+    });
+    // Change input values into floats to make it easier to validate
+    // Reason why I chose floats was to perform correct validation
+    // on decmial values. ParseInt would change a '19.2' into 19
+    // which will be accepted, but not accurate
+    const dateEvent = {
+      id: -1,
+      name: nameValue,
+      from: {
+        minute: parseFloat(fromDurationValue.minute),
+        hour: parseFloat(fromDurationValue.hour),
+        day: parseFloat(fromDurationValue.day),
+        month: parseFloat(fromDurationValue.month),
+        year: parseFloat(fromDurationValue.year),
+      },
+      to: {
+        minute: parseFloat(toDurationValue.minute),
+        hour: parseFloat(toDurationValue.hour),
+        day: parseFloat(toDurationValue.day),
+        month: parseFloat(toDurationValue.month),
+        year: parseFloat(toDurationValue.year),
+      },
+      color: colorValue,
+    };
+
+    // Validate name
+    if (!dateEvent.name) {
+      validForm = false;
+      setNameError(true);
+    }
+
+    // Check for any empty date fields or wrong formats (decimals/negatives)
+    let emptyDateField = false;
+    if (!util.isValidYear(dateEvent.to.year)) {
+      emptyDateField = true;
+      setToDurationError({
+        ...toDurationError,
+        year: true,
+      });
+    }
+    if (!util.isValidDay(dateEvent.to.day, dateEvent.to.month, dateEvent.to.year)) {
+      emptyDateField = true;
+      setToDurationError({
+        ...toDurationError,
+        day: true,
+      });
+    }
+    if (!util.isValidHour(dateEvent.to.hour)) {
+      emptyDateField = true;
+      setToDurationError({
+        ...toDurationError,
+        hour: true,
+      });
+    }
+    if (!util.isValidYear(dateEvent.from.year)) {
+      emptyDateField = true;
+      setFromDurationError({
+        ...fromDurationError,
+        year: true,
+      });
+    }
+    if (!util.isValidDay(dateEvent.from.day, dateEvent.from.month, dateEvent.from.year)) {
+      emptyDateField = true;
+      setFromDurationError({
+        ...fromDurationError,
+        day: true,
+      });
+    }
+    if (!util.isValidHour(dateEvent.from.hour)) {
+      emptyDateField = true;
+      setFromDurationError({
+        ...fromDurationError,
+        hour: true,
+      });
+    }
+
+    // If form is valid, check if empty date field makes it invalid
+    if (validForm) {
+      validForm = !emptyDateField;
+    }
+
+    // If no empty date fields, validate that 'from' and 'to' dates are
+    // not the same and that 'to' is not behind 'from'
+    if (!emptyDateField) {
+      if (dateEvent.to.year === dateEvent.from.year
+        && dateEvent.to.month === dateEvent.from.month
+        && dateEvent.to.day === dateEvent.from.day) {
+        if (dateEvent.to.hour === dateEvent.from.hour) {
+          if (dateEvent.to.minute === dateEvent.from.minute) {
+            validForm = false;
+            setToDurationError({
+              minute: true,
+              hour: true,
+              day: true,
+              month: true,
+              year: true,
+            });
+          } else if (dateEvent.to.minute < dateEvent.from.minute) {
+            validForm = false;
+            setToDurationError({
+              ...toDurationError,
+              minute: true,
+            });
+          }
+        } else if (dateEvent.to.hour < dateEvent.from.hour) {
+          validForm = false;
+          setToDurationError({
+            ...toDurationError,
+            hour: true,
+          });
+        }
+      }
+      if (dateEvent.to.year < dateEvent.from.year) {
+        validForm = false;
+        setToDurationError({
+          ...toDurationError,
+          year: true,
+        });
+      } else if (dateEvent.to.month < dateEvent.from.month) {
+        validForm = false;
+        setToDurationError({
+          ...toDurationError,
+          month: true,
+        });
+      } else if (dateEvent.to.day < dateEvent.from.day) {
+        validForm = false;
+        setToDurationError({
+          ...toDurationError,
+          day: true,
+        });
+      }
+    }
+    if (validForm) {
+      dispatch(addDateEvent(dateEvent));
+      handleClose();
+    }
+  };
 
   return (
     <Modal show={show} onHide={handleClose} dialogClassName={styles['modal-dialog']}>
@@ -279,7 +438,7 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
                 setValue={setColorValue}
               />
             </div>
-            <div className={styles['form-repeating']}>
+            {/* <div className={styles['form-repeating']}>
               <input
                 type="checkbox"
                 id="repeating"
@@ -287,12 +446,12 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
                 onChange={(event) => setRepeatingValue(event.target.checked)}
               />
               <label htmlFor="repeating">Repeating Event</label>
-            </div>
+            </div> */}
             <div className={styles['form-submit']}>
-              <button type="button">
+              <button type="button" className={styles['lightgray-button']} onClick={handleClose}>
                 Cancel
               </button>
-              <button type="button">
+              <button type="button" className={styles['blue-button']} onClick={handleSubmit}>
                 Create Event
               </button>
             </div>

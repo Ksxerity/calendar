@@ -6,6 +6,9 @@ import {
   getCurrentDate,
   calculateNextMonthAndYear,
   calculatePrevMonthAndYear,
+  isValidYear,
+  isValidHour,
+  isValidDay,
 } from './util';
 
 export type {
@@ -19,4 +22,7 @@ export {
   getCurrentDate,
   calculateNextMonthAndYear,
   calculatePrevMonthAndYear,
+  isValidYear,
+  isValidHour,
+  isValidDay,
 };
