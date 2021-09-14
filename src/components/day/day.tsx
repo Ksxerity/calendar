@@ -6,20 +6,19 @@ import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
 import styles from './day.module.scss';
 
-let selectedDate: ISelectedDate;
-let dispatch: AppDispatch;
-
-const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-  const newDate: ISelectedDate = { ...selectedDate };
-  newDate.hour = parseInt(event.currentTarget.innerHTML, 10);
-  dispatch(selectNewDate(newDate));
-};
-
 type HourProps = {
   hour: number,
 };
 
 const Hour = ({ hour }: HourProps): JSX.Element => {
+  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    const dispatch = useDispatch<AppDispatch>();
+    const newDate: ISelectedDate = { ...selectedDate };
+    newDate.hour = parseInt(event.currentTarget.innerHTML, 10);
+    dispatch(selectNewDate(newDate));
+  };
+
   return (
     <button
       type="button"
@@ -35,9 +34,6 @@ const Hour = ({ hour }: HourProps): JSX.Element => {
 };
 
 const Day = (): JSX.Element => {
-  selectedDate = useSelector((state: RootState) => state.date.selectedDate);
-  dispatch = useDispatch<AppDispatch>();
-
   const schedule = [];
   for (let i = 1; i <= 24; i++) {
     schedule.push(<Hour hour={i} />);

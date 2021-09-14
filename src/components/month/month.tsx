@@ -6,37 +6,36 @@ import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
 import styles from './month.module.scss';
 
-let selectedDate: ISelectedDate;
-let dispatch: AppDispatch;
-
-const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-  const style: string = (event.currentTarget.getAttribute('style') || '');
-  const newDate: ISelectedDate = { ...selectedDate };
-  newDate.day = parseInt(event.currentTarget.children[0].innerHTML, 10);
-  if (style) {
-    let color: string = style.split(':')[1].trim();
-    color = color.slice(0, color.length - 1);
-    if (color === 'gray') {
-      if (newDate.day > 15) {
-        const { month, year } = util.calculatePrevMonthAndYear(newDate.month, newDate.year);
-        newDate.month = month;
-        newDate.year = year;
-      } else {
-        const { month, year } = util.calculateNextMonthAndYear(newDate.month, newDate.year);
-        newDate.month = month;
-        newDate.year = year;
-      }
-    }
-    dispatch(selectNewDate(newDate));
-  }
-};
-
 type WeekProps = {
   dates: Array<util.DayType>,
   last: boolean,
+  selectedDate: ISelectedDate,
 };
 
-const Week = ({ dates, last }: WeekProps): JSX.Element => {
+const Week = ({ dates, last, selectedDate }: WeekProps): JSX.Element => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    const dispatch = useDispatch<AppDispatch>();
+    const style: string = (event.currentTarget.getAttribute('style') || '');
+    const newDate: ISelectedDate = { ...selectedDate };
+    newDate.day = parseInt(event.currentTarget.children[0].innerHTML, 10);
+    if (style) {
+      let color: string = style.split(':')[1].trim();
+      color = color.slice(0, color.length - 1);
+      if (color === 'gray') {
+        if (newDate.day > 15) {
+          const { month, year } = util.calculatePrevMonthAndYear(newDate.month, newDate.year);
+          newDate.month = month;
+          newDate.year = year;
+        } else {
+          const { month, year } = util.calculateNextMonthAndYear(newDate.month, newDate.year);
+          newDate.month = month;
+          newDate.year = year;
+        }
+      }
+      dispatch(selectNewDate(newDate));
+    }
+  };
+
   const days: Array<JSX.Element> = [];
   for (let i = 0; i < dates.length; i++) {
     if (last) {
@@ -85,8 +84,7 @@ const Week = ({ dates, last }: WeekProps): JSX.Element => {
 };
 
 const Month = (): JSX.Element => {
-  selectedDate = useSelector((state: RootState) => state.date.selectedDate);
-  dispatch = useDispatch<AppDispatch>();
+  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate.month, selectedDate.year);
 
   const week: Array<JSX.Element> = [];
@@ -102,9 +100,9 @@ const Month = (): JSX.Element => {
     </div>,
   );
   for (let i = 0; i < daysInMonth.length - 1; i++) {
-    week.push(<Week dates={daysInMonth[i]} last={false} />);
+    week.push(<Week dates={daysInMonth[i]} last={false} selectedDate={selectedDate} />);
   }
-  week.push(<Week dates={daysInMonth[daysInMonth.length - 1]} last={true} />);
+  week.push(<Week dates={daysInMonth[daysInMonth.length - 1]} last={true} selectedDate={selectedDate} />);
 
   let monthView: string;
   if (daysInMonth.length === 4) {

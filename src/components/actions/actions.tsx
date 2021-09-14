@@ -14,21 +14,6 @@ import {
 } from '../../assets';
 import styles from './actions.module.scss';
 
-let selectedDate: ISelectedDate;
-let dispatch: AppDispatch;
-
-const populateCurrentDateLabel = (): string => {
-  const currentDate: Date = new Date();
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  };
-  const dateLabel: string = currentDate.toLocaleString('default', options);
-  const weekdayLabel: string = currentDate.toLocaleString('default', { weekday: 'long' });
-  return `${weekdayLabel} ${dateLabel}`;
-};
-
 type ActionButtonProps = {
   src: string,
   id: string,
@@ -37,6 +22,7 @@ type ActionButtonProps = {
 };
 
 const ActionButton = (props: ActionButtonProps): JSX.Element => {
+  const dispatch = useDispatch<AppDispatch>();
   const {
     src,
     id,
@@ -83,8 +69,18 @@ const ActionButton = (props: ActionButtonProps): JSX.Element => {
 const Actions = (): JSX.Element => {
   const [showEventModal, setShowEventModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  selectedDate = useSelector((state: RootState) => state.date.selectedDate);
-  dispatch = useDispatch<AppDispatch>();
+
+  const populateCurrentDateLabel = (): string => {
+    const currentDate: Date = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    };
+    const dateLabel: string = currentDate.toLocaleString('default', options);
+    const weekdayLabel: string = currentDate.toLocaleString('default', { weekday: 'long' });
+    return `${weekdayLabel} ${dateLabel}`;
+  };
 
   return (
     <div className={styles.container}>
