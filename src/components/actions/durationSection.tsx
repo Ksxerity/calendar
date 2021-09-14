@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import styles from './actions.module.scss';
 
 type DurationErrors = {
@@ -25,6 +27,7 @@ type DurationSectionProps = {
 };
 
 const DurationSection = (props: DurationSectionProps): JSX.Element => {
+  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const {
     type,
     values,
@@ -91,7 +94,7 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
           <div className={styles['selection-label']}>
             Month
           </div>
-          <select onChange={(e) => handleSelection('month', e)}>
+          <select onChange={(e) => handleSelection('month', e)} defaultValue={values.month}>
             <option value="0">January</option>
             <option value="1">February</option>
             <option value="2">March</option>

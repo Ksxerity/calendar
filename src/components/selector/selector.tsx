@@ -18,6 +18,7 @@ type SelectionModalProps = {
 
 const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element => {
   const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const dispatch = useDispatch<AppDispatch>();
   const [yearError, setYearError] = useState(false);
   const [yearValue, setYearValue] = useState(`${selectedDate.year}`);
 
@@ -30,7 +31,6 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
       const newDate: ISelectedDate = { ...selectedDate };
       newDate.year = yearVal;
       newDate.month = parseInt(event.currentTarget.id, 10);
-      const dispatch = useDispatch<AppDispatch>();
       dispatch(selectNewDate(newDate));
       handleClose();
     }
@@ -76,6 +76,7 @@ const Selector = (): JSX.Element => {
   const [show, setShow] = useState(false);
   const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const calendarView = useSelector((state: RootState) => state.date.calendarView);
+  const dispatch = useDispatch<AppDispatch>();
 
   const populateMonthLabel = (): string => {
     const currentDate: Date = new Date(selectedDate.year, selectedDate.month, selectedDate.day);
@@ -150,7 +151,6 @@ const Selector = (): JSX.Element => {
         }
       }
     }
-    const dispatch = useDispatch<AppDispatch>();
     dispatch(selectNewDate(newDate));
   };
 

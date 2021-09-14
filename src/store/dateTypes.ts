@@ -1,8 +1,16 @@
+export interface IEventTime {
+  minute: number,
+  hour: number,
+  day: number,
+  month: number,
+  year: number,
+}
+
 export interface IDateEvent {
   id: number,
   name: string,
-  from: object,
-  to: object,
+  from: IEventTime,
+  to: IEventTime,
   color: string,
   // repeating: boolean
 }

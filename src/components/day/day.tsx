@@ -12,8 +12,8 @@ type HourProps = {
 
 const Hour = ({ hour }: HourProps): JSX.Element => {
   const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const dispatch = useDispatch<AppDispatch>();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    const dispatch = useDispatch<AppDispatch>();
     const newDate: ISelectedDate = { ...selectedDate };
     newDate.hour = parseInt(event.currentTarget.innerHTML, 10);
     dispatch(selectNewDate(newDate));
@@ -36,7 +36,7 @@ const Hour = ({ hour }: HourProps): JSX.Element => {
 const Day = (): JSX.Element => {
   const schedule = [];
   for (let i = 1; i <= 24; i++) {
-    schedule.push(<Hour hour={i} />);
+    schedule.push(<Hour key={`hour_${i}`} hour={i} />);
   }
 
   return (

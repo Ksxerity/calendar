@@ -12,8 +12,8 @@ type WeekProps = {
 };
 
 const Day = ({ date, selectedDate }: WeekProps): JSX.Element => {
+  const dispatch = useDispatch<AppDispatch>();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    const dispatch = useDispatch<AppDispatch>();
     const style: string = (event.currentTarget.getAttribute('style') || '');
     const newDate: ISelectedDate = { ...selectedDate };
     newDate.day = parseInt(event.currentTarget.innerHTML, 10);
@@ -55,15 +55,15 @@ const Week = (): JSX.Element => {
   const daysInWeek: Array<util.DayType> = util.getWeekArray(selectedDate.day, selectedDate.month, selectedDate.year);
 
   const week: Array<JSX.Element> = [];
-  week.push(<div className={styles['day-of-week']}>Sunday</div>);
-  week.push(<div className={styles['day-of-week']}>Monday</div>);
-  week.push(<div className={styles['day-of-week']}>Tuesday</div>);
-  week.push(<div className={styles['day-of-week']}>Wednesday</div>);
-  week.push(<div className={styles['day-of-week']}>Thursday</div>);
-  week.push(<div className={styles['day-of-week']}>Friday</div>);
-  week.push(<div className={styles['day-of-week']}>Saturday</div>);
+  week.push(<div key="sunday" className={styles['day-of-week']}>Sunday</div>);
+  week.push(<div key="monday" className={styles['day-of-week']}>Monday</div>);
+  week.push(<div key="tuesday" className={styles['day-of-week']}>Tuesday</div>);
+  week.push(<div key="wednesday" className={styles['day-of-week']}>Wednesday</div>);
+  week.push(<div key="thursday" className={styles['day-of-week']}>Thursday</div>);
+  week.push(<div key="friday" className={styles['day-of-week']}>Friday</div>);
+  week.push(<div key="saturday" className={styles['day-of-week']}>Saturday</div>);
   for (let i = 0; i < daysInWeek.length; i++) {
-    week.push(<Day date={daysInWeek[i]} selectedDate={selectedDate} />);
+    week.push(<Day key={`week${i}`} date={daysInWeek[i]} selectedDate={selectedDate} />);
   }
 
   return (

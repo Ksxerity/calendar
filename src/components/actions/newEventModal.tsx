@@ -16,6 +16,16 @@ type NewEventModalProps = {
 const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element => {
   const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const dispatch = useDispatch<AppDispatch>();
+  // Default State
+  const defaultName = '';
+  const defaultDate = {
+    minute: '0',
+    hour: `${selectedDate.hour}`,
+    day: `${selectedDate.day}`,
+    month: `${selectedDate.month}`,
+    year: `${selectedDate.year}`,
+  };
+  const defaultColor = 'green';
   // Error State
   const [nameError, setNameError] = useState(false);
   const [fromDurationError, setFromDurationError] = useState({
@@ -33,27 +43,14 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
     year: false,
   });
   // Value State
-  const [nameValue, setNameValue] = useState('');
-  const [fromDurationValue, setFromDurationValue] = useState({
-    minute: '0',
-    hour: `${selectedDate.hour}`,
-    day: `${selectedDate.day}`,
-    month: `${selectedDate.month}`,
-    year: `${selectedDate.year}`,
-  });
-  const [toDurationValue, setToDurationValue] = useState({
-    minute: '0',
-    hour: `${selectedDate.hour}`,
-    day: `${selectedDate.day}`,
-    month: `${selectedDate.month}`,
-    year: `${selectedDate.year}`,
-  });
-  const [colorValue, setColorValue] = useState('green');
+  const [nameValue, setNameValue] = useState(defaultName);
+  const [fromDurationValue, setFromDurationValue] = useState(defaultDate);
+  const [toDurationValue, setToDurationValue] = useState(defaultDate);
+  const [colorValue, setColorValue] = useState(defaultColor);
   // const [repeatingValue, setRepeatingValue] = useState(false);
 
-  const handleSubmit = (): void => {
-    let validForm = true;
-    // Reset error flags
+  const resetErrors = (): void => {
+    setNameError(false);
     setToDurationError({
       minute: false,
       hour: false,
@@ -68,6 +65,19 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
       month: false,
       year: false,
     });
+  };
+
+  const resetForm = (): void => {
+    setNameValue(defaultName);
+    setFromDurationValue(defaultDate);
+    setToDurationValue(defaultDate);
+    setColorValue(defaultColor);
+  };
+
+  const handleSubmit = (): void => {
+    let validForm = true;
+    // Reset error flags
+    resetErrors();
     // Change input values into floats to make it easier to validate
     // Reason why I chose floats was to perform correct validation
     // on decmial values. ParseInt would change a '19.2' into 19
@@ -201,6 +211,8 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
     }
     if (validForm) {
       dispatch(addDateEvent(dateEvent));
+      resetErrors();
+      resetForm();
       handleClose();
     }
   };
@@ -261,7 +273,15 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
               <label htmlFor="repeating">Repeating Event</label>
             </div> */}
             <div className={styles['form-submit']}>
-              <button type="button" className={styles['lightgray-button']} onClick={handleClose}>
+              <button
+                type="button"
+                className={styles['lightgray-button']}
+                onClick={() => {
+                  resetErrors();
+                  resetForm();
+                  handleClose();
+                }}
+              >
                 Cancel
               </button>
               <button type="button" className={styles['blue-button']} onClick={handleSubmit}>
