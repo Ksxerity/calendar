@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
@@ -16,17 +16,25 @@ type NewEventModalProps = {
 const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element => {
   const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const dispatch = useDispatch<AppDispatch>();
-  // Default State
-  const defaultName = '';
-  const defaultDate = {
+  // Initialize Value State
+  const [nameValue, setNameValue] = useState('');
+  const [fromDurationValue, setFromDurationValue] = useState({
     minute: '0',
     hour: `${selectedDate.hour}`,
     day: `${selectedDate.day}`,
     month: `${selectedDate.month}`,
     year: `${selectedDate.year}`,
-  };
-  const defaultColor = 'green';
-  // Error State
+  });
+  const [toDurationValue, setToDurationValue] = useState({
+    minute: '0',
+    hour: `${selectedDate.hour}`,
+    day: `${selectedDate.day}`,
+    month: `${selectedDate.month}`,
+    year: `${selectedDate.year}`,
+  });
+  const [colorValue, setColorValue] = useState('green');
+  // const [repeatingValue, setRepeatingValue] = useState(false);
+  // Initialize Error State
   const [nameError, setNameError] = useState(false);
   const [fromDurationError, setFromDurationError] = useState({
     minute: false,
@@ -42,12 +50,6 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
     month: false,
     year: false,
   });
-  // Value State
-  const [nameValue, setNameValue] = useState(defaultName);
-  const [fromDurationValue, setFromDurationValue] = useState(defaultDate);
-  const [toDurationValue, setToDurationValue] = useState(defaultDate);
-  const [colorValue, setColorValue] = useState(defaultColor);
-  // const [repeatingValue, setRepeatingValue] = useState(false);
 
   const resetErrors = (): void => {
     setNameError(false);
@@ -68,11 +70,29 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
   };
 
   const resetForm = (): void => {
-    setNameValue(defaultName);
-    setFromDurationValue(defaultDate);
-    setToDurationValue(defaultDate);
-    setColorValue(defaultColor);
+    setNameValue('');
+    setFromDurationValue({
+      minute: '0',
+      hour: `${selectedDate.hour}`,
+      day: `${selectedDate.day}`,
+      month: `${selectedDate.month}`,
+      year: `${selectedDate.year}`,
+    });
+    setToDurationValue({
+      minute: '0',
+      hour: `${selectedDate.hour}`,
+      day: `${selectedDate.day}`,
+      month: `${selectedDate.month}`,
+      year: `${selectedDate.year}`,
+    });
+    setColorValue('green');
   };
+
+  // Reset form on modal open and close
+  useEffect(() => {
+    resetErrors();
+    resetForm();
+  }, [show]);
 
   const handleSubmit = (): void => {
     let validForm = true;
@@ -211,8 +231,6 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
     }
     if (validForm) {
       dispatch(addDateEvent(dateEvent));
-      resetErrors();
-      resetForm();
       handleClose();
     }
   };
@@ -273,15 +291,7 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
               <label htmlFor="repeating">Repeating Event</label>
             </div> */}
             <div className={styles['form-submit']}>
-              <button
-                type="button"
-                className={styles['lightgray-button']}
-                onClick={() => {
-                  resetErrors();
-                  resetForm();
-                  handleClose();
-                }}
-              >
+              <button type="button" className={styles['lightgray-button']} onClick={handleClose}>
                 Cancel
               </button>
               <button type="button" className={styles['blue-button']} onClick={handleSubmit}>
