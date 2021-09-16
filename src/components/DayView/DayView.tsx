@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from '../../store/store';
 import { selectNewDate } from '../../store/dateSlice';
 import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
-import styles from './day.module.scss';
+import styles from './DayView.module.scss';
 
 type HourProps = {
   hour: number,
@@ -33,7 +33,7 @@ const Hour = ({ hour }: HourProps): JSX.Element => {
   );
 };
 
-const Day = (): JSX.Element => {
+const DayView = (): JSX.Element => {
   const schedule = [];
   for (let i = 1; i <= 24; i++) {
     schedule.push(<Hour key={`hour_${i}`} hour={i} />);
@@ -46,4 +46,4 @@ const Day = (): JSX.Element => {
   );
 };
 
-export default Day;
+export default DayView;

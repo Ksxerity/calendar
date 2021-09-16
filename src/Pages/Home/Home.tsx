@@ -1,13 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import styles from './home.module.scss';
+import styles from './Home.module.scss';
 import {
   Actions,
-  Day,
-  Month,
+  DayView,
+  MonthView,
   Selector,
-  Week,
+  WeekView,
 } from '../../components';
 
 const Home = () => {
@@ -15,11 +15,11 @@ const Home = () => {
   let calendarType: JSX.Element;
 
   if (calendarView === 'month') {
-    calendarType = <Month />;
+    calendarType = <MonthView />;
   } else if (calendarView === 'week') {
-    calendarType = <Week />;
+    calendarType = <WeekView />;
   } else {
-    calendarType = <Day />;
+    calendarType = <DayView />;
   }
 
   return (

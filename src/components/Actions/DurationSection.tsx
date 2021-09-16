@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import styles from './actions.module.scss';
+import styles from './Actions.module.scss';
 
 type DurationErrors = {
   minute: boolean,
@@ -27,7 +27,6 @@ type DurationSectionProps = {
 };
 
 const DurationSection = (props: DurationSectionProps): JSX.Element => {
-  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const {
     type,
     values,

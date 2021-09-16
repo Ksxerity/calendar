@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss';
 import { Provider } from 'react-redux';
-import { Home } from './pages';
+import { Home } from './Pages';
 import { store } from './store/store';
 import reportWebVitals from './reportWebVitals';
 

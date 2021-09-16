@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from '../../store/store';
 import { selectNewDate } from '../../store/dateSlice';
 import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
-import styles from './week.module.scss';
+import styles from './WeekView.module.scss';
 
 type WeekProps = {
   date: util.DayType,
@@ -50,7 +50,7 @@ const Day = ({ date, selectedDate }: WeekProps): JSX.Element => {
   );
 };
 
-const Week = (): JSX.Element => {
+const WeekView = (): JSX.Element => {
   const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const daysInWeek: Array<util.DayType> = util.getWeekArray(selectedDate.day, selectedDate.month, selectedDate.year);
 
@@ -73,4 +73,4 @@ const Week = (): JSX.Element => {
   );
 };
 
-export default Week;
+export default WeekView;

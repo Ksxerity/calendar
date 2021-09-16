@@ -1,13 +1,13 @@
-import Actions from './actions';
-import Day from './day';
-import Month from './month';
-import Selector from './selector';
-import Week from './week';
+import Actions from './Actions';
+import DayView from './DayView';
+import MonthView from './MonthView';
+import Selector from './Selector';
+import WeekView from './WeekView';
 
 export {
   Actions,
-  Day,
-  Month,
+  DayView,
+  MonthView,
   Selector,
-  Week,
+  WeekView,
 };

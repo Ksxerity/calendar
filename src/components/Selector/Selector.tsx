@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from '../../store/store';
 import { selectNewDate } from '../../store/dateSlice';
 import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
-import styles from './selector.module.scss';
+import styles from './Selector.module.scss';
 import {
   LeftArrowIcon,
   RightArrowIcon,

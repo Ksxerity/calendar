@@ -5,14 +5,14 @@ import { AppDispatch, RootState } from '../../store/store';
 import { changeCalendarView, selectNewDate } from '../../store/dateSlice';
 import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
-import NewEventModal from './newEventModal';
+import NewEventModal from './NewEventModal';
 import {
   CalendarViewIcon,
   JumpToNowIcon,
   NewEventIcon,
   SettingsIcon,
 } from '../../assets';
-import styles from './actions.module.scss';
+import styles from './Actions.module.scss';
 
 type ActionButtonProps = {
   src: string,

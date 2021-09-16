@@ -3,10 +3,10 @@ import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { addDateEvent } from '../../store/dateSlice';
-import DurationSection from './durationSection';
-import ColorSection from './colorSection';
+import DurationSection from './DurationSection';
+import ColorSection from './ColorSection';
 import * as util from '../../util';
-import styles from './actions.module.scss';
+import styles from './Actions.module.scss';
 
 type NewEventModalProps = {
   show: boolean,

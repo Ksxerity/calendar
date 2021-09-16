@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { AppDispatch, RootState } from '../../store/store';
 import { selectNewDate } from '../../store/dateSlice';
-import { ISelectedDate } from '../../store/dateTypes';
+import { ISelectedDate, IDateEvent } from '../../store/dateTypes';
 import * as util from '../../util';
-import styles from './month.module.scss';
+import styles from './MonthView.module.scss';
 
 type WeekProps = {
   dates: Array<util.DayType>,
@@ -17,10 +17,19 @@ const Week = ({ dates, last, selectedDate }: WeekProps): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const getCurrentWeekEvents = createSelector(
     (state: RootState) => state.date.events,
-    (events) => events.filter((event) => (event.from.year === selectedDate.year && event.from.month === selectedDate.month)),
+    (events: IDateEvent[]) => events.filter((event: IDateEvent) => {
+      if (event.from.year === selectedDate.year && event.from.month === selectedDate.month) {
+        if (!last && dates[0].day > dates[dates.length - 1].day) return event.from.day <= dates[dates.length - 1].day;
+        if (last) return dates[0].day <= event.from.day;
+        if (dates[0].day <= event.from.day && event.from.day <= dates[dates.length - 1].day) {
+          return true;
+        }
+      }
+      return false;
+    }),
   );
   const events = useSelector(getCurrentWeekEvents);
-  console.log(events);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const style: string = (event.currentTarget.getAttribute('style') || '');
     const newDate: ISelectedDate = { ...selectedDate };
@@ -45,44 +54,31 @@ const Week = ({ dates, last, selectedDate }: WeekProps): JSX.Element => {
 
   const days: Array<JSX.Element> = [];
   for (let i = 0; i < dates.length; i++) {
-    if (last) {
-      days.push(
-        <button
-          key={`day_${dates[i].day}`}
-          type="button"
-          style={{ color: `${dates[i].color}` }}
-          className={[
-            styles.day,
-            styles.last,
-            (dates[i].day === selectedDate.day && dates[i].color === 'black') ? styles.selected : null,
-          ].join(' ')}
-          onClick={handleClick}
-        >
-          <div className={styles.date}>
-            {dates[i].day}
-          </div>
-          {/* <div className={styles.event}>Event 1 with a super long name</div>
+    const currentEvents: Array<JSX.Element> = [];
+    // events.forEach((event: IDateEvent) => {
+    //   if (dates[i].color === 'black') {
+
+    //   }
+    // });
+    days.push(
+      <button
+        key={`day_${dates[i].day}`}
+        type="button"
+        style={{ color: `${dates[i].color}` }}
+        className={[
+          styles.day,
+          last ? styles.last : null,
+          (dates[i].day === selectedDate.day && dates[i].color === 'black') ? styles.selected : null,
+        ].join(' ')}
+        onClick={handleClick}
+      >
+        <div className={styles.date}>
+          {dates[i].day}
+        </div>
+        {/* <div className={styles.event}>Event 1 with a super long name</div>
           <div className={styles.event}>Event 2</div> */}
-        </button>,
-      );
-    } else {
-      days.push(
-        <button
-          key={`day_${dates[i].day}_last`}
-          type="button"
-          style={{ color: `${dates[i].color}` }}
-          className={[
-            styles.day,
-            (dates[i].day === selectedDate.day && dates[i].color === 'black') ? styles.selected : null,
-          ].join(' ')}
-          onClick={handleClick}
-        >
-          <div className={styles.date}>
-            {dates[i].day}
-          </div>
-        </button>,
-      );
-    }
+      </button>,
+    );
   }
 
   return (
@@ -92,7 +88,7 @@ const Week = ({ dates, last, selectedDate }: WeekProps): JSX.Element => {
   );
 };
 
-const Month = (): JSX.Element => {
+const MonthView = (): JSX.Element => {
   const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate.month, selectedDate.year);
 
@@ -108,17 +104,9 @@ const Month = (): JSX.Element => {
       <div>Saturday</div>
     </div>,
   );
-  for (let i = 0; i < daysInMonth.length - 1; i++) {
-    week.push(<Week key={`week_${i}`} dates={daysInMonth[i]} last={false} selectedDate={selectedDate} />);
+  for (let i = 0; i < daysInMonth.length; i++) {
+    week.push(<Week key={`week_${i}`} dates={daysInMonth[i]} last={i === daysInMonth.length - 1} selectedDate={selectedDate} />);
   }
-  week.push(
-    <Week
-      key={`week_${daysInMonth.length - 1}`}
-      dates={daysInMonth[daysInMonth.length - 1]}
-      last={true}
-      selectedDate={selectedDate}
-    />,
-  );
 
   let monthView: string;
   if (daysInMonth.length === 4) {
@@ -135,4 +123,4 @@ const Month = (): JSX.Element => {
   );
 };
 
-export default Month;
+export default MonthView;
