@@ -181,51 +181,37 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
     // If no empty date fields, validate that 'from' and 'to' dates are
     // not the same and that 'to' is not behind 'from'
     if (!emptyDateField) {
-      if (dateEvent.to.year === dateEvent.from.year
-        && dateEvent.to.month === dateEvent.from.month
-        && dateEvent.to.day === dateEvent.from.day) {
-        if (dateEvent.to.hour === dateEvent.from.hour) {
-          if (dateEvent.to.minute === dateEvent.from.minute) {
-            validForm = false;
-            setToDurationError({
-              minute: true,
-              hour: true,
-              day: true,
-              month: true,
-              year: true,
-            });
-          } else if (dateEvent.to.minute < dateEvent.from.minute) {
-            validForm = false;
-            setToDurationError({
-              ...toDurationError,
-              minute: true,
-            });
-          }
-        } else if (dateEvent.to.hour < dateEvent.from.hour) {
-          validForm = false;
-          setToDurationError({
-            ...toDurationError,
-            hour: true,
-          });
-        }
-      }
-      if (dateEvent.to.year < dateEvent.from.year) {
+      const start = new Date(
+        dateEvent.from.year,
+        dateEvent.from.month,
+        dateEvent.from.day,
+        dateEvent.from.hour,
+        dateEvent.from.minute,
+      );
+      const end = new Date(
+        dateEvent.to.year,
+        dateEvent.to.month,
+        dateEvent.to.day,
+        dateEvent.to.hour,
+        dateEvent.to.minute,
+      );
+      if (start.getTime() === end.getTime()) {
         validForm = false;
         setToDurationError({
-          ...toDurationError,
+          minute: true,
+          hour: true,
+          day: true,
+          month: true,
           year: true,
         });
-      } else if (dateEvent.to.month < dateEvent.from.month) {
+      } else if (end.getTime() < start.getTime()) {
         validForm = false;
         setToDurationError({
-          ...toDurationError,
-          month: true,
-        });
-      } else if (dateEvent.to.day < dateEvent.from.day) {
-        validForm = false;
-        setToDurationError({
-          ...toDurationError,
+          minute: true,
+          hour: true,
           day: true,
+          month: true,
+          year: true,
         });
       }
     }
