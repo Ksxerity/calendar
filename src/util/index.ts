@@ -11,6 +11,11 @@ import {
   isValidDay,
 } from './util';
 
+import {
+  currentWeekEventSelector,
+  dayEventSelector,
+} from './selectors';
+
 export type {
   DayType,
 };
@@ -25,4 +30,6 @@ export {
   isValidYear,
   isValidHour,
   isValidDay,
+  currentWeekEventSelector,
+  dayEventSelector,
 };

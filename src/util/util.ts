@@ -1,5 +1,3 @@
-import { ISelectedDate } from '../store/dateTypes';
-
 function leapYear(year: number): number {
   if (year % 4 === 0) {
     return 29;
@@ -32,102 +30,6 @@ export function getNumberOfDaysInMonth(month: number, year: number): number {
   return days;
 }
 
-export type DayType = {
-  // Previous month days: GRAY
-  // Current month days: BLACK
-  // Holidays in current month
-  color: string,
-  day: number,
-};
-
-export const getMonthArray = (month: number, year: number): Array<Array<DayType>> => {
-  const daysInMonth: number = getNumberOfDaysInMonth(month, year);
-  const firstDayOfMonth: Date = new Date(year, month, 1);
-  const dayOne: number = firstDayOfMonth.getDay();
-  const dayArray: Array<Array<DayType>> = [[]];
-  let index = 0;
-
-  // Populating days before the 1st of the month with the last few days of the previous month
-  let daysInPrevMonth: number;
-  if (month === 0) {
-    daysInPrevMonth = getNumberOfDaysInMonth(11, year - 1);
-  } else {
-    daysInPrevMonth = getNumberOfDaysInMonth(month - 1, year);
-  }
-  for (let i = 0; i < dayOne; i++) {
-    dayArray[index].push({ color: 'gray', day: daysInPrevMonth - (dayOne - i - 1) });
-  }
-
-  // Populating the days of the current month
-  for (let i = 1; i <= daysInMonth; i++) {
-    if (dayArray[index].length === 7) {
-      dayArray.push([]);
-      index += 1;
-    }
-    dayArray[index].push({ color: 'black', day: i });
-  }
-
-  // Populating the days after the end of the current month with the first few days
-  // of the next month
-  let count = 1;
-  while (dayArray[index].length !== 7) {
-    dayArray[index].push({ color: 'gray', day: count });
-    count += 1;
-  }
-  return dayArray;
-};
-
-export const getWeekArray = (day: number, month: number, year: number): Array<DayType> => {
-  const daysInMonth: number = getNumberOfDaysInMonth(month, year);
-  const dayOfMonth: Date = new Date(year, month, day);
-  const dayOfWeek: number = dayOfMonth.getDay();
-  const dayArray: Array<DayType> = [];
-  let currDay = day - dayOfWeek;
-
-  // Populating days before the 1st of the month with the last few days of the previous month
-  let daysInPrevMonth: number;
-  if (month === 0) {
-    daysInPrevMonth = getNumberOfDaysInMonth(11, year - 1);
-  } else {
-    daysInPrevMonth = getNumberOfDaysInMonth(month - 1, year);
-  }
-  while (currDay <= 0) {
-    dayArray.push({ color: 'gray', day: daysInPrevMonth + currDay });
-    currDay += 1;
-  }
-
-  // Populating the days of the current month
-  while (currDay <= daysInMonth && dayArray.length !== 7) {
-    dayArray.push({ color: 'black', day: currDay });
-    currDay += 1;
-  }
-
-  // Populating the days after the end of the current month with the first few days
-  // of the next month
-  while (currDay >= daysInMonth && dayArray.length !== 7) {
-    dayArray.push({ color: 'gray', day: currDay - daysInMonth });
-    currDay += 1;
-  }
-
-  return dayArray;
-};
-
-export const getCurrentDate = (): ISelectedDate => {
-  const date: Date = new Date();
-  const dateObject: ISelectedDate = {
-    month: date.getMonth(),
-    day: date.getDate(),
-    year: date.getFullYear(),
-    hour: date.getHours(),
-  };
-  return dateObject;
-};
-
-type MonthYearObject = {
-  month: number,
-  year: number
-};
-
 export const calculatePrevMonthAndYear = (month: number, year: number): MonthYearObject => {
   const obj = { month, year };
   if (month === 0) {
@@ -148,6 +50,108 @@ export const calculateNextMonthAndYear = (month: number, year: number): MonthYea
     obj.month += 1;
   }
   return obj;
+};
+
+export type DayType = {
+  // Previous month days: GRAY
+  // Current month days: BLACK
+  // Holidays in current month
+  color: string,
+  date: Date,
+};
+
+export const getMonthArray = (date: Date): Array<Array<DayType>> => {
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const daysInMonth: number = getNumberOfDaysInMonth(month, year);
+  const firstDayOfMonth: Date = new Date(year, month, 1);
+  const dayOne: number = firstDayOfMonth.getDay();
+  const dayArray: Array<Array<DayType>> = [[]];
+  let index = 0;
+
+  // Populating days before the 1st of the month with the last few days of the previous month
+  const prevMonthAndYear = calculatePrevMonthAndYear(month, year);
+  const daysInPrevMonth = getNumberOfDaysInMonth(prevMonthAndYear.month, prevMonthAndYear.year);
+  for (let i = 0; i < dayOne; i++) {
+    dayArray[index].push({
+      color: 'gray',
+      date: new Date(prevMonthAndYear.year, prevMonthAndYear.month, daysInPrevMonth - (dayOne - i - 1)),
+    });
+  }
+
+  // Populating the days of the current month
+  for (let i = 1; i <= daysInMonth; i++) {
+    if (dayArray[index].length === 7) {
+      dayArray.push([]);
+      index += 1;
+    }
+    dayArray[index].push({
+      color: 'black',
+      date: new Date(year, month, i),
+    });
+  }
+
+  // Populating the days after the end of the current month with the first few days
+  // of the next month
+  let count = 1;
+  const nextMonthAndYear = calculateNextMonthAndYear(month, year);
+  while (dayArray[index].length !== 7) {
+    dayArray[index].push({
+      color: 'gray',
+      date: new Date(nextMonthAndYear.year, nextMonthAndYear.month, count),
+    });
+    count += 1;
+  }
+  return dayArray;
+};
+
+export const getWeekArray = (date: Date): Array<DayType> => {
+  const daysInMonth: number = getNumberOfDaysInMonth(date.getMonth(), date.getFullYear());
+  const dayOfWeek: number = date.getDay();
+  const dayArray: Array<DayType> = [];
+  let currDay = date.getDate() - dayOfWeek;
+
+  // Populating days before the 1st of the month with the last few days of the previous month
+  const prevMonthAndYear = calculatePrevMonthAndYear(date.getMonth(), date.getFullYear());
+  const daysInPrevMonth = getNumberOfDaysInMonth(prevMonthAndYear.month, prevMonthAndYear.year);
+  while (currDay <= 0) {
+    dayArray.push({
+      color: 'gray',
+      date: new Date(prevMonthAndYear.year, prevMonthAndYear.month, daysInPrevMonth + currDay),
+    });
+    currDay += 1;
+  }
+
+  // Populating the days of the current month
+  while (currDay <= daysInMonth && dayArray.length !== 7) {
+    dayArray.push({
+      color: 'black',
+      date: new Date(date.getFullYear(), date.getMonth(), currDay),
+    });
+    currDay += 1;
+  }
+
+  // Populating the days after the end of the current month with the first few days
+  // of the next month
+  const nextMonthAndYear = calculateNextMonthAndYear(date.getMonth(), date.getFullYear());
+  while (currDay >= daysInMonth && dayArray.length !== 7) {
+    dayArray.push({
+      color: 'gray',
+      date: new Date(nextMonthAndYear.year, nextMonthAndYear.month, currDay - daysInMonth),
+    });
+    currDay += 1;
+  }
+
+  return dayArray;
+};
+
+export const getCurrentDate = (): Date => {
+  return new Date();
+};
+
+type MonthYearObject = {
+  month: number,
+  year: number
 };
 
 export const isValidYear = (year: number): boolean => {

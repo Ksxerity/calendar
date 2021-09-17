@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { changeCalendarView, selectNewDate } from '../../store/dateSlice';
-import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
 import NewEventModal from './NewEventModal';
 import {
@@ -31,7 +30,7 @@ const ActionButton = (props: ActionButtonProps): JSX.Element => {
   } = props;
 
   const returnToCurrentDate = (): void => {
-    const dateObject: ISelectedDate = util.getCurrentDate();
+    const dateObject: Date = util.getCurrentDate();
     dispatch(selectNewDate(dateObject));
   };
 

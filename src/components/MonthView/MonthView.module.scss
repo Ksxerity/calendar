@@ -67,5 +67,27 @@
     white-space: nowrap;
     font-size: .9vw;
     padding-left: 4px;
+    &.start {
+      margin-left: 5px;
+      border-radius: 3px 0 0 3px;
+    }
+    &.end {
+      margin-right: 3px;
+    }
+    &.green {
+      background-color: #29BF12;
+    }
+    &.lightgreen {
+      background-color: #ABFF4F;
+    }
+    &.blue {
+      background-color: #08BDBD;
+    }
+    &.red {
+      background-color: #F21B3F;
+    }
+    &.orange {
+      background-color: #FF9914;
+    }
   }
 }

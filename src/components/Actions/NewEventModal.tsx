@@ -20,17 +20,17 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
   const [nameValue, setNameValue] = useState('');
   const [fromDurationValue, setFromDurationValue] = useState({
     minute: '0',
-    hour: `${selectedDate.hour}`,
-    day: `${selectedDate.day}`,
-    month: `${selectedDate.month}`,
-    year: `${selectedDate.year}`,
+    hour: `${selectedDate.getHours()}`,
+    day: `${selectedDate.getDate()}`,
+    month: `${selectedDate.getMonth()}`,
+    year: `${selectedDate.getFullYear()}`,
   });
   const [toDurationValue, setToDurationValue] = useState({
     minute: '0',
-    hour: `${selectedDate.hour}`,
-    day: `${selectedDate.day}`,
-    month: `${selectedDate.month}`,
-    year: `${selectedDate.year}`,
+    hour: `${selectedDate.getHours()}`,
+    day: `${selectedDate.getDate()}`,
+    month: `${selectedDate.getMonth()}`,
+    year: `${selectedDate.getFullYear()}`,
   });
   const [colorValue, setColorValue] = useState('green');
   // const [repeatingValue, setRepeatingValue] = useState(false);
@@ -73,17 +73,17 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
     setNameValue('');
     setFromDurationValue({
       minute: '0',
-      hour: `${selectedDate.hour}`,
-      day: `${selectedDate.day}`,
-      month: `${selectedDate.month}`,
-      year: `${selectedDate.year}`,
+      hour: `${selectedDate.getHours()}`,
+      day: `${selectedDate.getDate()}`,
+      month: `${selectedDate.getMonth()}`,
+      year: `${selectedDate.getFullYear()}`,
     });
     setToDurationValue({
       minute: '0',
-      hour: `${selectedDate.hour}`,
-      day: `${selectedDate.day}`,
-      month: `${selectedDate.month}`,
-      year: `${selectedDate.year}`,
+      hour: `${selectedDate.getHours()}`,
+      day: `${selectedDate.getDate()}`,
+      month: `${selectedDate.getMonth()}`,
+      year: `${selectedDate.getFullYear()}`,
     });
     setColorValue('green');
   };
@@ -173,14 +173,9 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
       });
     }
 
-    // If form is valid, check if empty date field makes it invalid
-    if (validForm) {
-      validForm = !emptyDateField;
-    }
-
     // If no empty date fields, validate that 'from' and 'to' dates are
     // not the same and that 'to' is not behind 'from'
-    if (!emptyDateField) {
+    if (validForm && !emptyDateField) {
       const start = new Date(
         dateEvent.from.year,
         dateEvent.from.month,
@@ -214,10 +209,15 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
           year: true,
         });
       }
-    }
-    if (validForm) {
-      dispatch(addDateEvent(dateEvent));
-      handleClose();
+      if (validForm) {
+        const finalEvent = {
+          ...dateEvent,
+          from: start,
+          to: end,
+        };
+        dispatch(addDateEvent(finalEvent));
+        handleClose();
+      }
     }
   };
 

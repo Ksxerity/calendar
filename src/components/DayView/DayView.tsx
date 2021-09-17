@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { selectNewDate } from '../../store/dateSlice';
-import { ISelectedDate } from '../../store/dateTypes';
 import * as util from '../../util';
 import styles from './DayView.module.scss';
 
@@ -14,9 +13,9 @@ const Hour = ({ hour }: HourProps): JSX.Element => {
   const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
   const dispatch = useDispatch<AppDispatch>();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    const newDate: ISelectedDate = { ...selectedDate };
-    newDate.hour = parseInt(event.currentTarget.innerHTML, 10);
-    dispatch(selectNewDate(newDate));
+    const newHour = parseInt(event.currentTarget.innerHTML, 10);
+    selectedDate.setHours(newHour);
+    dispatch(selectNewDate(selectedDate));
   };
 
   return (
@@ -24,7 +23,7 @@ const Hour = ({ hour }: HourProps): JSX.Element => {
       type="button"
       className={[
         styles.hour,
-        (hour === selectedDate.hour) ? styles.selected : null,
+        (hour === selectedDate.getHours()) ? styles.selected : null,
       ].join(' ')}
       onClick={handleClick}
     >
