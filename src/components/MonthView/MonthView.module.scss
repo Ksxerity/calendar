@@ -61,17 +61,21 @@
   }
   .date {
     padding-left: 10px;
-    padding-top: 5px;
   }
   .event {
     white-space: nowrap;
-    font-size: .9vw;
+    font-size: 1.35vh;
     padding-left: 4px;
     &.start {
       margin-left: 5px;
       border-radius: 3px 0 0 3px;
     }
     &.end {
+      margin-right: 3px;
+    }
+    &.singular {
+      margin-left: 5px;
+      border-radius: 3px;
       margin-right: 3px;
     }
     &.green {
