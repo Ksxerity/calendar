@@ -16,7 +16,7 @@ type SelectionModalProps = {
 };
 
 const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element => {
-  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const dispatch = useDispatch<AppDispatch>();
   const [yearError, setYearError] = useState(false);
   const [yearValue, setYearValue] = useState(`${selectedDate.getFullYear()}`);
@@ -31,7 +31,7 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
       const daysInMonth = util.getNumberOfDaysInMonth(month, yearVal);
       const day = selectedDate.getDate() > daysInMonth ? daysInMonth : selectedDate.getDate();
       const newDate = new Date(yearVal, month, day, selectedDate.getHours());
-      dispatch(selectNewDate(newDate));
+      dispatch(selectNewDate(newDate.toString()));
       handleClose();
     }
   };
@@ -74,7 +74,7 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
 
 const Selector = (): JSX.Element => {
   const [show, setShow] = useState(false);
-  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const calendarView = useSelector((state: RootState) => state.date.calendarView);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -152,7 +152,7 @@ const Selector = (): JSX.Element => {
         }
       }
     }
-    dispatch(selectNewDate(new Date(year, month, day)));
+    dispatch(selectNewDate(new Date(year, month, day).toString()));
   };
 
   return (

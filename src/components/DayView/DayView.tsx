@@ -10,12 +10,12 @@ type HourProps = {
 };
 
 const Hour = ({ hour }: HourProps): JSX.Element => {
-  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const dispatch = useDispatch<AppDispatch>();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const newHour = parseInt(event.currentTarget.innerHTML, 10);
     selectedDate.setHours(newHour);
-    dispatch(selectNewDate(selectedDate));
+    dispatch(selectNewDate(selectedDate.toString()));
   };
 
   return (

@@ -37,8 +37,13 @@ export const currentWeekEventSelector = (dates: Array<DayType>, selectedDate: Da
     (events: IDateEvent[]) => events.filter((event: IDateEvent) => {
       let startDate: Date;
       let endDate: Date;
-      const eventStartDate = new Date(event.from.getFullYear(), event.from.getMonth(), event.from.getDate());
-      const eventEndDate = new Date(event.to.getFullYear(), event.to.getMonth(), event.to.getDate());
+      // Only compare year/month/day for filtering
+      const eventStartDate = new Date(event.from);
+      eventStartDate.setHours(0);
+      eventStartDate.setMinutes(0);
+      const eventEndDate = new Date(event.to);
+      eventEndDate.setHours(0);
+      eventEndDate.setMinutes(0);
       if (dates[0].color === 'gray') {
         // Week contains days from previous month
         const prevMonthAndYear = calculatePrevMonthAndYear(selectedDate.getMonth(), selectedDate.getFullYear());
@@ -78,8 +83,13 @@ export const dayEventSelector = (date: Date): EventsSelector => {
   const selector = createSelector(
     (state: RootState) => state.date.events,
     (events: IDateEvent[]) => events.filter((event: IDateEvent) => {
-      const eventStartDate = new Date(event.from.getFullYear(), event.from.getMonth(), event.from.getDate());
-      const eventEndDate = new Date(event.to.getFullYear(), event.to.getMonth(), event.to.getDate());
+      // Only compare year/month/day for filtering
+      const eventStartDate = new Date(event.from);
+      eventStartDate.setHours(0);
+      eventStartDate.setMinutes(0);
+      const eventEndDate = new Date(event.to);
+      eventEndDate.setHours(0);
+      eventEndDate.setMinutes(0);
       const currentDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       if (currentDay.getTime() === eventStartDate.getTime()) {
         // Event starts this day

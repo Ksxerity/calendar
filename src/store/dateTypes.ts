@@ -9,14 +9,14 @@ export interface IEventTime {
 export interface IDateEvent {
   id: number,
   name: string,
-  from: Date,
-  to: Date,
+  from: string,
+  to: string,
   color: string,
   // repeating: boolean
 }
 
 export type DateState = {
-  selectedDate: Date,
+  selectedDate: string,
   calendarView: string,
   events: IDateEvent[]
 };

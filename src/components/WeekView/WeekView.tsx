@@ -33,7 +33,7 @@ const Day = ({ date, selectedDate }: WeekProps): JSX.Element => {
           year = nextMonthAndYear.year;
         }
       }
-      dispatch(selectNewDate(new Date(year, month, day, selectedDate.getHours())));
+      dispatch(selectNewDate(new Date(year, month, day, selectedDate.getHours()).toString()));
     }
   };
 
@@ -53,7 +53,7 @@ const Day = ({ date, selectedDate }: WeekProps): JSX.Element => {
 };
 
 const WeekView = (): JSX.Element => {
-  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const daysInWeek: Array<util.DayType> = util.getWeekArray(selectedDate);
 
   const week: Array<JSX.Element> = [];

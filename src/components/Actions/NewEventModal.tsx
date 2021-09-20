@@ -14,7 +14,7 @@ type NewEventModalProps = {
 };
 
 const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element => {
-  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const dispatch = useDispatch<AppDispatch>();
   // Initialize Value State
   const [nameValue, setNameValue] = useState('');
@@ -212,8 +212,8 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
       if (validForm) {
         const finalEvent = {
           ...dateEvent,
-          from: start,
-          to: end,
+          from: start.toString(),
+          to: end.toString(),
         };
         dispatch(addDateEvent(finalEvent));
         handleClose();

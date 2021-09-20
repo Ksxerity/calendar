@@ -43,7 +43,7 @@ const Week = (props: WeekProps): JSX.Element => {
           year = nextMonthAndYear.year;
         }
       }
-      dispatch(selectNewDate(new Date(year, month, day, selectedDate.getHours())));
+      dispatch(selectNewDate(new Date(year, month, day, selectedDate.getHours()).toString()));
     }
   };
 
@@ -51,7 +51,7 @@ const Week = (props: WeekProps): JSX.Element => {
   for (let i = 0; i < dates.length; i++) {
     const nextPriority = [...priority]; // A copy of the priority listing without events that end this day
     const events = useSelector(util.dayEventSelector(dates[i].date));
-    events.sort((a, b) => a.from.valueOf() - b.from.valueOf()); // Sort by start time
+    events.sort((a, b) => new Date(a.from).valueOf() - new Date(b.from).valueOf()); // Sort by start time
     const eventArray = new Array(5).fill(<div />);
     /**
      * PRIORITY LOGIC:
@@ -64,12 +64,15 @@ const Week = (props: WeekProps): JSX.Element => {
      */
     for (let j = 0; i < events.length; i++) {
       const event = events[j];
+      const currentDate = new Date(dates[i].date);
+      const eventStartDate = new Date(event.from);
+      const eventEndDate = new Date(event.to);
       if (!priority.includes(null)) {
         // No more space for other events
         eventArray[4] = <button type="button" className={styles.event}>...</button>;
       } else if (priority.includes(event.id)) {
         const index = priority.indexOf(event.id);
-        if (dates[i].date <= event.to && event.to <= dates[i].date) {
+        if (currentDate <= eventStartDate && eventEndDate <= currentDate) {
           // Event ends on this day
           eventArray[index] = (
             <button
@@ -97,7 +100,7 @@ const Week = (props: WeekProps): JSX.Element => {
             </button>
           );
         }
-      } else if (dates[i].date <= event.to && event.to <= dates[i].date) {
+      } else if (currentDate <= eventStartDate && eventEndDate <= currentDate) {
         // Event starts and ends this day
         const index = priority.indexOf(null);
         eventArray[index] = (
@@ -167,7 +170,7 @@ const Week = (props: WeekProps): JSX.Element => {
 };
 
 const MonthView = (): JSX.Element => {
-  const selectedDate = useSelector((state: RootState) => state.date.selectedDate);
+  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate);
   let priority = new Array(4).fill(null); // Array of event ids. The index is the priority.
   const setPriority = (arr: Array<number | null>) => {

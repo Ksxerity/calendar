@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IDateEvent, DateState } from './dateTypes';
 
 const initialState: DateState = {
-  selectedDate: new Date(),
+  selectedDate: new Date().toString(),
   calendarView: 'month',
   events: [],
 };
@@ -20,7 +20,7 @@ const dateSlice = createSlice({
         state.calendarView = 'month';
       }
     },
-    selectNewDate: (state, action: PayloadAction<Date>) => {
+    selectNewDate: (state, action: PayloadAction<string>) => {
       state.selectedDate = action.payload;
     },
     addDateEvent: (state, action: PayloadAction<IDateEvent>) => {

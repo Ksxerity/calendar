@@ -31,7 +31,7 @@ const ActionButton = (props: ActionButtonProps): JSX.Element => {
 
   const returnToCurrentDate = (): void => {
     const dateObject: Date = util.getCurrentDate();
-    dispatch(selectNewDate(dateObject));
+    dispatch(selectNewDate(dateObject.toString()));
   };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
