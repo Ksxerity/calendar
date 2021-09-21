@@ -10,8 +10,8 @@ type WeekProps = {
   dates: Array<util.DayType>,
   last: boolean,
   selectedDate: Date,
-  priority: Array<number | null>,
-  setPriority: ((arr: Array<number | null>) => void),
+  prevWeekPriorityOrder: Array<number | null>,
+  setPrevWeekPriorityOrder: ((arr: Array<number | null>) => void),
 };
 
 const Week = (props: WeekProps): JSX.Element => {
@@ -19,8 +19,8 @@ const Week = (props: WeekProps): JSX.Element => {
     dates,
     last,
     selectedDate,
-    priority,
-    setPriority,
+    prevWeekPriorityOrder,
+    setPrevWeekPriorityOrder,
   } = props;
   const dispatch = useDispatch<AppDispatch>();
 
@@ -48,8 +48,9 @@ const Week = (props: WeekProps): JSX.Element => {
   };
 
   const days: Array<JSX.Element> = [];
+  const nextPriority = [...prevWeekPriorityOrder]; // A separate listing that ONLY has long events
   for (let i = 0; i < dates.length; i++) {
-    const nextPriority = [...priority]; // A copy of the priority listing without events that end this day
+    const currentPriority = [...nextPriority]; // A copy of the priority listing to be filled with events from today
     const events = useSelector(util.dayEventSelector(dates[i].date));
     events.sort((a, b) => new Date(a.from).valueOf() - new Date(b.from).valueOf()); // Sort by start time
     const eventArray = new Array(5).fill(<div />);
@@ -62,17 +63,17 @@ const Week = (props: WeekProps): JSX.Element => {
      * If the event starts and ends this day, add it to the next available slot
      * If all slots are filled, just add a "..." div to the end
      */
-    for (let j = 0; i < events.length; i++) {
+    for (let j = 0; j < events.length; j++) {
       const event = events[j];
       const currentDate = new Date(dates[i].date);
       const eventStartDate = new Date(event.from);
       const eventEndDate = new Date(event.to);
-      if (!priority.includes(null)) {
+      if (!currentPriority.includes(null)) {
         // No more space for other events
         eventArray[4] = <button type="button" className={styles.event}>...</button>;
-      } else if (priority.includes(event.id)) {
-        const index = priority.indexOf(event.id);
-        if (currentDate <= eventStartDate && eventEndDate <= currentDate) {
+      } else if (currentPriority.includes(event.id)) {
+        const index = currentPriority.indexOf(event.id);
+        if (currentDate.getDate() === eventStartDate.getDate() && eventEndDate.getDate() === currentDate.getDate()) {
           // Event ends on this day
           eventArray[index] = (
             <button
@@ -100,9 +101,9 @@ const Week = (props: WeekProps): JSX.Element => {
             </button>
           );
         }
-      } else if (currentDate <= eventStartDate && eventEndDate <= currentDate) {
+      } else if (currentDate.getDate() === eventStartDate.getDate() && eventEndDate.getDate() === currentDate.getDate()) {
         // Event starts and ends this day
-        const index = priority.indexOf(null);
+        const index = currentPriority.indexOf(null);
         eventArray[index] = (
           <button
             type="button"
@@ -115,10 +116,10 @@ const Week = (props: WeekProps): JSX.Element => {
             {event.name}
           </button>
         );
-        priority[index] = event.id;
+        currentPriority[index] = event.id;
       } else {
         // Event has a long duration
-        const index = priority.indexOf(null);
+        const index = currentPriority.indexOf(null);
         eventArray[index] = (
           <button
             type="button"
@@ -131,15 +132,10 @@ const Week = (props: WeekProps): JSX.Element => {
             {event.name}
           </button>
         );
-        priority[index] = event.id;
+        currentPriority[index] = event.id;
         nextPriority[index] = event.id;
       }
     }
-    setPriority(nextPriority);
-    // const eventArray = [
-    //   <div key="-" />,
-    //   <div key="?" className={[styles.event, styles.start, styles.green].join(' ')}>Event 1 with a super long name</div>,
-    // ];
     days.push(
       <button
         key={`day_${dates[i].date.getDate()}`}
@@ -155,12 +151,13 @@ const Week = (props: WeekProps): JSX.Element => {
         <div className={styles.date}>
           {dates[i].date.getDate()}
         </div>
-        {/* {eventArray} */}
+        {eventArray}
         {/* <div className={[styles.event, styles.start, styles.green].join(' ')}>Event 1 with a super long name</div>
         <div className={[styles.event, styles.start, styles.orange].join(' ')}>Event 1 with a super long name</div> */}
       </button>,
     );
   }
+  setPrevWeekPriorityOrder(nextPriority);
 
   return (
     <div className={styles.week}>
@@ -172,9 +169,13 @@ const Week = (props: WeekProps): JSX.Element => {
 const MonthView = (): JSX.Element => {
   const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate);
-  let priority = new Array(4).fill(null); // Array of event ids. The index is the priority.
-  const setPriority = (arr: Array<number | null>) => {
-    priority = [...arr];
+  /**
+   * Array of event ids. The index is the priority.
+   * Keeps track of the order of long events from week to week
+   */
+  let prevWeekPriorityOrder = new Array(4).fill(null);
+  const setPrevWeekPriorityOrder = (arr: Array<number | null>) => {
+    prevWeekPriorityOrder = [...arr];
   };
 
   const week: Array<JSX.Element> = [];
@@ -196,8 +197,8 @@ const MonthView = (): JSX.Element => {
         dates={daysInMonth[i]}
         last={i === daysInMonth.length - 1}
         selectedDate={selectedDate}
-        priority={priority}
-        setPriority={(arr: Array<number | null>) => setPriority(arr)}
+        prevWeekPriorityOrder={prevWeekPriorityOrder}
+        setPrevWeekPriorityOrder={(arr: Array<number | null>) => setPrevWeekPriorityOrder(arr)}
       />,
     );
   }
