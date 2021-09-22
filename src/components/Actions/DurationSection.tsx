@@ -111,7 +111,7 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
         <div className={['form-group', 'form-input', styles.day].join(' ')}>
           <input
             type="number"
-            name="day"
+            id={`day_${type}`}
             className={[
               'form-group',
               errors.day ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
@@ -122,7 +122,7 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
             })}
             value={values.day}
           />
-          <label htmlFor="day">Day</label>
+          <label htmlFor={`day_${type}`}>Day</label>
         </div>
         <div className={['form-group', 'form-input', styles.year].join(' ')}>
           <input

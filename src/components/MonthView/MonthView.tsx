@@ -10,8 +10,11 @@ type WeekProps = {
   dates: Array<util.DayType>,
   last: boolean,
   selectedDate: Date,
-  prevWeekPriorityOrder: Array<number | null>,
-  setPrevWeekPriorityOrder: ((arr: Array<number | null>) => void),
+};
+
+type EventPosition = {
+  start: number,
+  end: number,
 };
 
 const Week = (props: WeekProps): JSX.Element => {
@@ -19,149 +22,119 @@ const Week = (props: WeekProps): JSX.Element => {
     dates,
     last,
     selectedDate,
-    prevWeekPriorityOrder,
-    setPrevWeekPriorityOrder,
   } = props;
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    const style: string = (event.currentTarget.getAttribute('style') || '');
-    const day = parseInt(event.currentTarget.children[0].innerHTML, 10);
-    let month = selectedDate.getMonth();
-    let year = selectedDate.getFullYear();
-    if (style) {
-      let color: string = style.split(':')[1].trim();
-      color = color.slice(0, color.length - 1);
-      if (color === 'gray') {
-        if (day > 15) {
-          const prevMonthAndYear = util.calculatePrevMonthAndYear(month, year);
-          month = prevMonthAndYear.month;
-          year = prevMonthAndYear.year;
-        } else {
-          const nextMonthAndYear = util.calculateNextMonthAndYear(month, year);
-          month = nextMonthAndYear.month;
-          year = nextMonthAndYear.year;
-        }
-      }
-      dispatch(selectNewDate(new Date(year, month, day, selectedDate.getHours()).toString()));
+  const handleGridClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+    const date: string = (event.currentTarget.getAttribute('data-date') || '');
+    if (!date) {
+      // Handle event info modal
+    } else {
+      const currentDate: Date = new Date(date);
+      currentDate.setHours(selectedDate.getHours());
+      dispatch(selectNewDate(currentDate.toString()));
     }
   };
 
-  const days: Array<JSX.Element> = [];
-  const nextPriority = [...prevWeekPriorityOrder]; // A separate listing that ONLY has long events
+  const grid: Array<JSX.Element> = [];
+  const datesRow: Array<JSX.Element> = [];
   for (let i = 0; i < dates.length; i++) {
-    const currentPriority = [...nextPriority]; // A copy of the priority listing to be filled with events from today
-    const events = useSelector(util.dayEventSelector(dates[i].date));
-    events.sort((a, b) => new Date(a.from).valueOf() - new Date(b.from).valueOf()); // Sort by start time
-    const eventArray = new Array(5).fill(<div />);
-    /**
-     * PRIORITY LOGIC:
-     * Events are sorted by start time.
-     * That means all events that are multi-day events will be prioritized first
-     *    If event already has a priority listing, continue to use that slot
-     *    If event does not have a priority listing, then find the next available slot
-     * If the event starts and ends this day, add it to the next available slot
-     * If all slots are filled, just add a "..." div to the end
-     */
-    for (let j = 0; j < events.length; j++) {
-      const event = events[j];
-      const currentDate = new Date(dates[i].date);
-      const eventStartDate = new Date(event.from);
-      const eventEndDate = new Date(event.to);
-      if (!currentPriority.includes(null)) {
-        // No more space for other events
-        eventArray[4] = <button type="button" className={styles.event}>...</button>;
-      } else if (currentPriority.includes(event.id)) {
-        const index = currentPriority.indexOf(event.id);
-        if (currentDate.getDate() === eventStartDate.getDate() && eventEndDate.getDate() === currentDate.getDate()) {
-          // Event ends on this day
-          eventArray[index] = (
-            <button
-              type="button"
-              className={[
-                styles.event,
-                styles.end,
-                styles[event.color],
-              ].join(' ')}
-            >
-              {event.name}
-            </button>
-          );
-          nextPriority[index] = null;
-        } else {
-          eventArray[index] = (
-            <button
-              type="button"
-              className={[
-                styles.event,
-                styles[event.color],
-              ].join(' ')}
-            >
-              {event.name}
-            </button>
-          );
-        }
-      } else if (currentDate.getDate() === eventStartDate.getDate() && eventEndDate.getDate() === currentDate.getDate()) {
-        // Event starts and ends this day
-        const index = currentPriority.indexOf(null);
-        eventArray[index] = (
-          <button
-            type="button"
-            className={[
-              styles.event,
-              styles.singular,
-              styles[event.color],
-            ].join(' ')}
-          >
-            {event.name}
-          </button>
-        );
-        currentPriority[index] = event.id;
-      } else {
-        // Event has a long duration
-        const index = currentPriority.indexOf(null);
-        eventArray[index] = (
-          <button
-            type="button"
-            className={[
-              styles.event,
-              styles.start,
-              styles[event.color],
-            ].join(' ')}
-          >
-            {event.name}
-          </button>
-        );
-        currentPriority[index] = event.id;
-        nextPriority[index] = event.id;
-      }
-    }
-    days.push(
-      <button
-        key={`day_${dates[i].date.getDate()}`}
-        type="button"
-        style={{ color: `${dates[i].color}` }}
+    grid.push(
+      <div
+        role="button"
+        style={{
+          gridColumnStart: i + 1,
+        }}
         className={[
-          styles.day,
+          styles['grid-box'],
           last ? styles.last : null,
           (dates[i].date.getDate() === selectedDate.getDate() && dates[i].color === 'black') ? styles.selected : null,
         ].join(' ')}
-        onClick={handleClick}
+        aria-hidden="true"
+        data-color={dates[i].color}
+        data-date={dates[i].date}
+        onClick={handleGridClick}
+      />,
+    );
+    datesRow.push(
+      <div
+        role="button"
+        aria-hidden="true"
+        data-color={dates[i].color}
+        data-date={dates[i].date}
+        style={{
+          color: dates[i].color,
+          gridColumnStart: i + 1,
+        }}
+        className={styles.date}
+        onClick={handleGridClick}
       >
-        <div className={styles.date}>
-          {dates[i].date.getDate()}
-        </div>
-        {eventArray}
-        {/* <div className={[styles.event, styles.start, styles.green].join(' ')}>Event 1 with a super long name</div>
-        <div className={[styles.event, styles.start, styles.orange].join(' ')}>Event 1 with a super long name</div> */}
-      </button>,
+        {(new Date(dates[i].date)).getDate()}
+      </div>,
     );
   }
-  setPrevWeekPriorityOrder(nextPriority);
+
+  const eventsRow: Array<JSX.Element> = new Array(5);
+  const eventsPos: Array<Array<number | null>> = new Array(5).fill(null).map(() => new Array(7).fill(null));
+  const events: Array<IDateEvent> = useSelector(util.currentWeekEventSelector(dates, selectedDate));
+  events.sort((event1, event2) => {
+    // Sort by start time. Multi-day events are prioritized.
+    const event1Start = new Date(event1.from);
+    const event2Start = new Date(event2.from);
+    const event1End = new Date(event1.to);
+    const event2End = new Date(event2.to);
+    if (event1Start.getFullYear() === event2Start.getFullYear()) {
+      if (event1Start.getMonth() === event2Start.getMonth()) {
+        if (event1Start.getDate() === event2Start.getDate()) {
+          // If events start on same day, sort by duration
+          return ((event2End.valueOf() - event2Start.valueOf()) - (event1End.valueOf() - event1Start.valueOf()));
+        }
+      }
+    }
+    return event1Start.valueOf() - event2Start.valueOf();
+  });
+  const firstDayOfWeek: Date = new Date(dates[0].date);
+  const lastDayOfWeek: Date = new Date(dates[dates.length - 1].date);
+  lastDayOfWeek.setHours(23);
+  lastDayOfWeek.setMinutes(59);
+  for (let i = 0; i < events.length; i++) {
+    const event: IDateEvent = events[i];
+    const eventStartDate: Date = new Date(event.from);
+    const eventEndDate: Date = new Date(event.to);
+    const startPos: number = (eventStartDate <= firstDayOfWeek) ? 0 : eventStartDate.getDay();
+    const endPos: number = (eventEndDate >= lastDayOfWeek) ? 6 : eventEndDate.getDay();
+    let index = 0;
+    for (let row = 0; row < eventsPos.length; row++) {
+      if (eventsPos[row][startPos] === null) {
+        index = row;
+        break;
+      }
+    }
+    eventsPos[index].splice(startPos, (endPos - startPos) + 1, ...new Array((endPos - startPos) + 1).fill(event.id));
+    eventsRow.push(
+      <div
+        role="button"
+        style={{
+          gridColumn: `${startPos + 1} / ${endPos + 2}`,
+          gridRow: index + 2,
+        }}
+        className={[
+          styles.event,
+          styles[events[i].color],
+        ].join(' ')}
+        aria-hidden="true"
+        onClick={handleGridClick}
+      >
+        {events[i].name}
+      </div>,
+    );
+  }
 
   return (
-    <div className={styles.week}>
-      {days}
+    <div className={styles['week-row']}>
+      {grid}
+      {datesRow}
+      {eventsRow}
     </div>
   );
 };
@@ -169,25 +142,17 @@ const Week = (props: WeekProps): JSX.Element => {
 const MonthView = (): JSX.Element => {
   const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate);
-  /**
-   * Array of event ids. The index is the priority.
-   * Keeps track of the order of long events from week to week
-   */
-  let prevWeekPriorityOrder = new Array(4).fill(null);
-  const setPrevWeekPriorityOrder = (arr: Array<number | null>) => {
-    prevWeekPriorityOrder = [...arr];
-  };
 
   const week: Array<JSX.Element> = [];
   week.push(
-    <div key="days_of_week" className={styles['days-of-week']}>
-      <div>Sunday</div>
-      <div>Monday</div>
-      <div>Tuesday</div>
-      <div>Wednesday</div>
-      <div>Thursday</div>
-      <div>Friday</div>
-      <div>Saturday</div>
+    <div key="days_of_week-row" className={styles['days-of-week-row']}>
+      <div className={styles['day-of-week']}>Sunday</div>
+      <div className={styles['day-of-week']}>Monday</div>
+      <div className={styles['day-of-week']}>Tuesday</div>
+      <div className={styles['day-of-week']}>Wednesday</div>
+      <div className={styles['day-of-week']}>Thursday</div>
+      <div className={styles['day-of-week']}>Friday</div>
+      <div className={styles['day-of-week']}>Saturday</div>
     </div>,
   );
   for (let i = 0; i < daysInMonth.length; i++) {
@@ -197,8 +162,6 @@ const MonthView = (): JSX.Element => {
         dates={daysInMonth[i]}
         last={i === daysInMonth.length - 1}
         selectedDate={selectedDate}
-        prevWeekPriorityOrder={prevWeekPriorityOrder}
-        setPrevWeekPriorityOrder={(arr: Array<number | null>) => setPrevWeekPriorityOrder(arr)}
       />,
     );
   }

@@ -48,15 +48,15 @@ export const currentWeekEventSelector = (dates: Array<DayType>, selectedDate: Da
         // Week contains days from previous month
         const prevMonthAndYear = calculatePrevMonthAndYear(selectedDate.getMonth(), selectedDate.getFullYear());
         startDate = new Date(prevMonthAndYear.year, prevMonthAndYear.month, dates[0].date.getDate());
-        endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[6].date.getDate());
+        endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[6].date.getDate(), 23, 59);
       } else if (dates[6].color === 'gray') {
         // Week contains days from next month
         const nextMonthAndYear = calculateNextMonthAndYear(selectedDate.getMonth(), selectedDate.getFullYear());
         startDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[0].date.getDate());
-        endDate = new Date(nextMonthAndYear.year, nextMonthAndYear.month, dates[6].date.getDate());
+        endDate = new Date(nextMonthAndYear.year, nextMonthAndYear.month, dates[6].date.getDate(), 23, 59);
       } else {
         startDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[0].date.getDate());
-        endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[6].date.getDate());
+        endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[6].date.getDate(), 23, 59);
       }
       if (startDate <= eventStartDate && eventStartDate <= endDate) {
         // Event starts this week

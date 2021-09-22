@@ -19,79 +19,70 @@
   grid-template-rows: 3% repeat(6, minmax(0, 1fr));
 }
 
-.week {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  grid-template-rows: 100%;
-}
-
-.days-of-week {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  grid-template-rows: 100%;
+.days-of-week-row {
+  display: flex;
+  flex-direction: row;
   text-align: center;
 }
 
-.day {
+.day-of-week {
+  flex: 1 0;
+}
+
+.week-row {
   display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 26% repeat(6, minmax(0, 1fr));
-  border-radius: 10px;
-  padding: 0;
-  font-size: 1.5vw;
-  text-align: left;
-  border: none;
-  overflow: hidden;
-  background: linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
-  +.day {
-    background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat,
-    linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
-  }
-  &.last {
-    background: none;
-    +.day {
-      background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: 23% repeat(5, minmax(0, 1fr));
+  row-gap: 1px;
+  height: 100%;
+  .grid-box {
+    grid-row: 1 / 7;
+    border-radius: 10px;
+    border: none;
+    overflow: hidden;
+    background: linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
+    +.grid-box {
+      background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat,
+      linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
     }
-  }
-  &:hover {
-    background-color: #e3e3e3 !important;
-  }
-  &.selected {
-    background-color: lightsteelblue !important;
+    &.last {
+      background: none;
+      +.grid-box {
+        background: linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat;
+      }
+    }
+    &:hover {
+      background-color: #e3e3e3 !important;
+    }
+    &.selected {
+      background-color: lightsteelblue !important;
+    }
   }
   .date {
+    grid-row: 1;
     padding-left: 10px;
+    font-size: 1.25vw;
   }
   .event {
-    white-space: nowrap;
-    font-size: 1.35vh;
-    padding-left: 4px;
-    &.start {
-      margin-left: 5px;
-      border-radius: 3px 0 0 3px;
-    }
-    &.end {
-      margin-right: 3px;
-    }
-    &.singular {
-      margin-left: 5px;
-      border-radius: 3px;
-      margin-right: 3px;
-    }
-    &.green {
-      background-color: #29BF12;
-    }
-    &.lightgreen {
-      background-color: #ABFF4F;
-    }
-    &.blue {
-      background-color: #08BDBD;
-    }
-    &.red {
-      background-color: #F21B3F;
-    }
-    &.orange {
-      background-color: #FF9914;
-    }
+    margin-left: 1px;
+    padding-left: 5px;
+    border-radius: 3px;
+    padding-right: 3px;
+    overflow: hidden;
+  }
+  .green {
+    background-color: #29BF12;
+  }
+  .lightgreen {
+    background-color: #ABFF4F;
+  }
+  .blue {
+    background-color: #08BDBD;
+  }
+  .red {
+    background-color: #F21B3F;
+  }
+  .orange {
+    background-color: #FF9914;
   }
 }
