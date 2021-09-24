@@ -64,25 +64,12 @@
     font-size: 1.25vw;
   }
   .event {
+    display: flex;
+    align-items: center;
     margin-left: 1px;
     padding-left: 5px;
     border-radius: 3px;
     padding-right: 3px;
     overflow: hidden;
-  }
-  .green {
-    background-color: #29BF12;
-  }
-  .lightgreen {
-    background-color: #ABFF4F;
-  }
-  .blue {
-    background-color: #08BDBD;
-  }
-  .red {
-    background-color: #F21B3F;
-  }
-  .orange {
-    background-color: #FF9914;
   }
 }

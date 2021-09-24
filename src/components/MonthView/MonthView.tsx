@@ -120,7 +120,7 @@ const Week = (props: WeekProps): JSX.Element => {
         }}
         className={[
           styles.event,
-          styles[events[i].color],
+          events[i].color,
         ].join(' ')}
         aria-hidden="true"
         onClick={handleGridClick}
