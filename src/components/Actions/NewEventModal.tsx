@@ -33,6 +33,7 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
     year: `${selectedDate.getFullYear()}`,
   });
   const [colorValue, setColorValue] = useState('green');
+  const [descriptionValue, setDescriptionValue] = useState('');
   // const [repeatingValue, setRepeatingValue] = useState(false);
   // Initialize Error State
   const [nameError, setNameError] = useState(false);
@@ -120,6 +121,7 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
         year: parseFloat(toDurationValue.year),
       },
       color: colorValue,
+      description: descriptionValue,
     };
 
     // Validate name
@@ -229,21 +231,19 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
       <Modal.Body className={styles['modal-body']}>
         <div>
           <form noValidate={true} onSubmit={(e) => e.preventDefault()} autoComplete="off">
-            <div className={styles['form-name']}>
-              <div className={['form-group', 'form-input'].join(' ')}>
-                <input
-                  type="text"
-                  id="nameInput"
-                  name="name"
-                  className={[
-                    'form-group',
-                    nameError ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
-                  placeholder="Name"
-                  onChange={(event) => setNameValue(event.currentTarget.value)}
-                  value={nameValue}
-                />
-                <label htmlFor="nameInput">Name</label>
-              </div>
+            <div className={['form-group', 'form-input'].join(' ')}>
+              <input
+                type="text"
+                id="nameInput"
+                name="name"
+                className={[
+                  'form-group',
+                  nameError ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
+                placeholder="Name"
+                onChange={(event) => setNameValue(event.currentTarget.value)}
+                value={nameValue}
+              />
+              <label htmlFor="nameInput">Name</label>
             </div>
             <div className={styles['form-duration']}>
               <DurationSection
@@ -266,6 +266,18 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
                 selected={colorValue}
                 setValue={setColorValue}
               />
+            </div>
+            <div className={['form-group', 'form-input', styles['form-description']].join(' ')}>
+              <textarea
+                id="descriptionInput"
+                name="description"
+                // rows={5}
+                className={['form-group', styles['form-description-box']].join(' ')}
+                placeholder="Description"
+                onChange={(event) => setDescriptionValue(event.currentTarget.value)}
+                value={descriptionValue}
+              />
+              <label htmlFor="descriptionInput">Description</label>
             </div>
             {/* <div className={styles['form-repeating']}>
               <input

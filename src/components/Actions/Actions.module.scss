@@ -72,6 +72,31 @@
             width: 75%;
           }
         }
+        .selection {
+          width: 100%;
+          color: #34495e;
+          border-color: #34495e;
+          .selection-label {
+            padding-top: 7px;
+            padding-left: 4px;
+            margin-bottom: -3px;
+            font-size: calc(1.8vh * .75);
+            color: inherit;
+          }
+          select {
+            width: 100%;
+            border: 0;
+            border-bottom: 2px;
+            border-style: solid;
+            border-color: inherit;
+            outline: none !important;
+            background-color: white;
+          }
+          &.selection-error {
+            color: red !important;
+            border-color: red !important;
+          }
+        }
       }
       .separator {
         margin-left: 2px;
@@ -81,6 +106,7 @@
     }
     .form-color {
       margin-top: 20px;
+      padding-left: 5px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -100,6 +126,10 @@
           }
         }
       }
+    }
+    .form-description {
+      margin-top: 12px;
+      // padding-bottom: 150px;
     }
     .form-repeating {
       margin-top: 20px;
@@ -126,30 +156,6 @@
         background-color: white;
         color: #34495e;
         border: 2px groove #63b0e3;
-      }
-    }
-    .selection {
-      width: 100%;
-      color: #34495e;
-      border-color: #34495e;
-      .selection-label {
-        padding-top: 7px;
-        margin-bottom: -3px;
-        font-size: calc(1.8vh * .75);
-        color: inherit;
-      }
-      select {
-        width: 100%;
-        border: 0;
-        border-bottom: 2px;
-        border-style: solid;
-        border-color: inherit;
-        outline: none !important;
-        background-color: white;
-      }
-      &.selection-error {
-        color: red !important;
-        border-color: red !important;
       }
     }
   }

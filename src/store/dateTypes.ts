@@ -12,6 +12,7 @@ export interface IDateEvent {
   from: string,
   to: string,
   color: string,
+  description: string,
   // repeating: boolean
 }
 
