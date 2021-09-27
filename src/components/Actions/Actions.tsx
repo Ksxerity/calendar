@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { changeCalendarView, selectNewDate } from '../../store/dateSlice';
 import * as util from '../../util';
-import NewEventModal from './NewEventModal';
+import { CreateEventModal } from '../Modals';
 import {
   CalendarViewIcon,
   JumpToNowIcon,
@@ -83,7 +83,7 @@ const Actions = (): JSX.Element => {
 
   return (
     <div className={styles.container}>
-      <NewEventModal show={showEventModal} handleClose={() => setShowEventModal(false)} />
+      <CreateEventModal show={showEventModal} handleClose={() => setShowEventModal(false)} />
       <div className={styles.date}>
         {populateCurrentDateLabel()}
       </div>

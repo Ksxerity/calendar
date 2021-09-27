@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Actions.module.scss';
+import styles from './CreateEventModal.module.scss';
 
 type ColorSectionProps = {
   selected: string,

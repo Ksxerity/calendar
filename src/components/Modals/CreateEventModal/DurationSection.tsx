@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import styles from './Actions.module.scss';
+import { RootState } from '../../../store/store';
+import styles from './CreateEventModal.module.scss';
 
 type DurationErrors = {
   minute: boolean,

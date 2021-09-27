@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { addDateEvent } from '../../store/dateSlice';
+import { AppDispatch, RootState } from '../../../store/store';
+import { addDateEvent } from '../../../store/dateSlice';
 import DurationSection from './DurationSection';
 import ColorSection from './ColorSection';
-import * as util from '../../util';
-import styles from './Actions.module.scss';
+import * as util from '../../../util';
+import styles from './CreateEventModal.module.scss';
 
-type NewEventModalProps = {
+type CreateEventModalProps = {
   show: boolean,
   handleClose: () => void,
 };
 
-const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element => {
+const CreateEventModal = ({ show, handleClose }: CreateEventModalProps): JSX.Element => {
   const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const dispatch = useDispatch<AppDispatch>();
   // Initialize Value State
@@ -303,4 +303,4 @@ const NewEventModal = ({ show, handleClose }: NewEventModalProps): JSX.Element =
   );
 };
 
-export default NewEventModal;
+export default CreateEventModal;
