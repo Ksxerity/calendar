@@ -4,6 +4,7 @@ import { RootState } from '../store/store';
 import { calculateNextMonthAndYear, calculatePrevMonthAndYear, DayType } from './util';
 
 type EventsSelector = OutputSelector<{ date: DateState; }, IDateEvent[], (res: IDateEvent[]) => IDateEvent[]>;
+type EventSelector = OutputSelector<{ date: DateState; }, IDateEvent | undefined, (res: IDateEvent[]) => IDateEvent | undefined>;
 // export const currentMonthEventSelector = (selectedDate: ISelectedDate): EventsSelector => {
 //   const daysInMonth: Array<Array<DayType>> = getMonthArray(selectedDate.month, selectedDate.year);
 //   const selector = createSelector(
@@ -105,6 +106,14 @@ export const dayEventSelector = (date: Date): EventsSelector => {
       }
       return false;
     }),
+  );
+  return selector;
+};
+
+export const eventIdSelector = (eventId: number): EventSelector => {
+  const selector = createSelector(
+    (state: RootState) => state.date.events,
+    (events: IDateEvent[]) => events.find((event: IDateEvent) => event.id === eventId),
   );
   return selector;
 };

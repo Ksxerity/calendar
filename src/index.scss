@@ -98,24 +98,59 @@ form {
   }
 }
 
-.green {
-  background-color: #1ABC9C;
+$green: #1ABC9C;
+$lightgreen: #2ECC71;
+$blue: #3498DB;
+$red: #E74C3C;
+$orange: #E67E22;
+$yellow: #F1C40F;
+$purple: #9B59B6;
+
+.green-background {
+  background-color: $green;
 }
-.lightgreen {
-  background-color: #2ECC71;
+.green-text {
+  color: $green;
 }
-.blue {
-  background-color: #3498DB;
+
+.lightgreen-background {
+  background-color: $lightgreen;
 }
-.red {
-  background-color: #E74C3C;
+.lightgreen-text {
+  color: $lightgreen;
 }
-.orange {
-  background-color: #E67E22;
+
+.blue-background {
+  background-color: $blue;
 }
-.yellow {
-  background-color: #F1C40F;
+.blue-text {
+  color: $blue;
 }
-.purple {
-  background-color: #9B59B6;
+
+.red-background {
+  background-color: $red;
+}
+.red-text {
+  color: $red;
+}
+
+.orange-background {
+  background-color: $orange;
+}
+.orange-text {
+  color: $orange;
+}
+
+.yellow-background {
+  background-color: $yellow;
+}
+.yellow-text {
+  color: $yellow;
+}
+
+.purple-background {
+  background-color: $purple;
+}
+.purple-text {
+  color: $purple;
 }

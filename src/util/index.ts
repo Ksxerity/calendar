@@ -14,6 +14,7 @@ import {
 import {
   currentWeekEventSelector,
   dayEventSelector,
+  eventIdSelector,
 } from './selectors';
 
 export type {
@@ -32,4 +33,5 @@ export {
   isValidDay,
   currentWeekEventSelector,
   dayEventSelector,
+  eventIdSelector,
 };

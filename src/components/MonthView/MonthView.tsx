@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { selectNewDate } from '../../store/dateSlice';
 import { IDateEvent, IEventTime } from '../../store/dateTypes';
+import { DisplayEventModal } from '../Modals';
 import * as util from '../../util';
 import styles from './MonthView.module.scss';
 
@@ -10,11 +11,7 @@ type WeekProps = {
   dates: Array<util.DayType>,
   last: boolean,
   selectedDate: Date,
-};
-
-type EventPosition = {
-  start: number,
-  end: number,
+  showEvent: (eventId: number) => void,
 };
 
 const Week = (props: WeekProps): JSX.Element => {
@@ -22,13 +19,17 @@ const Week = (props: WeekProps): JSX.Element => {
     dates,
     last,
     selectedDate,
+    showEvent,
   } = props;
   const dispatch = useDispatch<AppDispatch>();
 
   const handleGridClick = (event: React.MouseEvent<HTMLDivElement>): void => {
     const date: string = (event.currentTarget.getAttribute('data-date') || '');
     if (!date) {
-      // Handle event info modal
+      const eventId: string = (event.currentTarget.getAttribute('data-event-id') || '');
+      if (eventId) {
+        showEvent(parseInt(eventId, 10));
+      }
     } else {
       const currentDate: Date = new Date(date);
       currentDate.setHours(selectedDate.getHours());
@@ -120,9 +121,10 @@ const Week = (props: WeekProps): JSX.Element => {
         }}
         className={[
           styles.event,
-          events[i].color,
+          `${events[i].color}-background`,
         ].join(' ')}
         aria-hidden="true"
+        data-event-id={events[i].id}
         onClick={handleGridClick}
       >
         {events[i].name}
@@ -140,8 +142,15 @@ const Week = (props: WeekProps): JSX.Element => {
 };
 
 const MonthView = (): JSX.Element => {
+  const [show, setShow] = useState(false);
+  const [modalEventId, setModalEventId] = useState(-1);
   const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate);
+
+  const showEvent = (eventId: number) => {
+    setModalEventId(eventId);
+    setShow(true);
+  };
 
   const week: Array<JSX.Element> = [];
   week.push(
@@ -162,6 +171,7 @@ const MonthView = (): JSX.Element => {
         dates={daysInMonth[i]}
         last={i === daysInMonth.length - 1}
         selectedDate={selectedDate}
+        showEvent={showEvent}
       />,
     );
   }
@@ -176,6 +186,7 @@ const MonthView = (): JSX.Element => {
   }
   return (
     <div className={monthView}>
+      <DisplayEventModal show={show} modalEventId={modalEventId} handleClose={() => setShow(false)} />
       {week}
     </div>
   );
