@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { selectNewDate } from '../../store/dateSlice';
 import { IDateEvent, IEventTime } from '../../store/dateTypes';
-import { DisplayEventModal } from '../Modals';
+import { CreateEventModal, DisplayEventModal } from '../Modals';
 import * as util from '../../util';
 import styles from './MonthView.module.scss';
 
@@ -142,14 +142,15 @@ const Week = (props: WeekProps): JSX.Element => {
 };
 
 const MonthView = (): JSX.Element => {
-  const [show, setShow] = useState(false);
+  const [showDisplayModal, setShowDisplayModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [modalEventId, setModalEventId] = useState(-1);
   const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate);
 
   const showEvent = (eventId: number) => {
     setModalEventId(eventId);
-    setShow(true);
+    setShowDisplayModal(true);
   };
 
   const week: Array<JSX.Element> = [];
@@ -186,7 +187,13 @@ const MonthView = (): JSX.Element => {
   }
   return (
     <div className={monthView}>
-      <DisplayEventModal show={show} modalEventId={modalEventId} handleClose={() => setShow(false)} />
+      <DisplayEventModal
+        show={showDisplayModal}
+        eventId={modalEventId}
+        handleClose={() => setShowDisplayModal(false)}
+        handleShowEditModal={() => setShowEditModal(true)}
+      />
+      <CreateEventModal show={showEditModal} eventIdToEdit={modalEventId} handleClose={() => setShowEditModal(false)} />
       {week}
     </div>
   );

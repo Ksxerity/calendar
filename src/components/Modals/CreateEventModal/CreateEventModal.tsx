@@ -2,91 +2,77 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
-import { addDateEvent } from '../../../store/dateSlice';
+import { addDateEvent, editDateEvent } from '../../../store/dateSlice';
 import DurationSection from './DurationSection';
 import ColorSection from './ColorSection';
 import * as util from '../../../util';
 import styles from './CreateEventModal.module.scss';
+import { IDateEvent } from '../../../store/dateTypes';
 
 type CreateEventModalProps = {
   show: boolean,
   handleClose: () => void,
+  // eslint-disable-next-line react/require-default-props
+  eventIdToEdit?: number,
 };
 
-const CreateEventModal = ({ show, handleClose }: CreateEventModalProps): JSX.Element => {
+const defaultEventToEdit: IDateEvent = {
+  id: -1,
+  name: '',
+  from: '',
+  to: '',
+  color: 'green',
+  description: '',
+};
+
+const defaultDateValue = (selectedDate: Date, eventDate: string) => {
+  const dateObj: Date = (eventDate === '') ? selectedDate : new Date(eventDate);
+  return {
+    minute: '0',
+    hour: `${dateObj.getHours()}`,
+    day: `${dateObj.getDate()}`,
+    month: `${dateObj.getMonth()}`,
+    year: `${dateObj.getFullYear()}`,
+  };
+};
+
+const defaultErrorState = {
+  minute: false,
+  hour: false,
+  day: false,
+  month: false,
+  year: false,
+};
+
+const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEventModalProps): JSX.Element => {
   const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
+  const eventToEdit = useSelector(util.eventIdSelector(eventIdToEdit)) || defaultEventToEdit;
+  selectedDate.setMinutes(0);
   const dispatch = useDispatch<AppDispatch>();
   // Initialize Value State
-  const [nameValue, setNameValue] = useState('');
-  const [fromDurationValue, setFromDurationValue] = useState({
-    minute: '0',
-    hour: `${selectedDate.getHours()}`,
-    day: `${selectedDate.getDate()}`,
-    month: `${selectedDate.getMonth()}`,
-    year: `${selectedDate.getFullYear()}`,
-  });
-  const [toDurationValue, setToDurationValue] = useState({
-    minute: '0',
-    hour: `${selectedDate.getHours()}`,
-    day: `${selectedDate.getDate()}`,
-    month: `${selectedDate.getMonth()}`,
-    year: `${selectedDate.getFullYear()}`,
-  });
-  const [colorValue, setColorValue] = useState('green');
-  const [descriptionValue, setDescriptionValue] = useState('');
+  const [nameValue, setNameValue] = useState(eventToEdit.name);
+  const [fromDurationValue, setFromDurationValue] = useState(defaultDateValue(selectedDate, eventToEdit.from));
+  const [toDurationValue, setToDurationValue] = useState(defaultDateValue(selectedDate, eventToEdit.to));
+  const [colorValue, setColorValue] = useState(eventToEdit.color);
+  const [descriptionValue, setDescriptionValue] = useState(eventToEdit.description);
   // const [repeatingValue, setRepeatingValue] = useState(false);
   // Initialize Error State
   const [nameError, setNameError] = useState(false);
-  const [fromDurationError, setFromDurationError] = useState({
-    minute: false,
-    hour: false,
-    day: false,
-    month: false,
-    year: false,
-  });
-  const [toDurationError, setToDurationError] = useState({
-    minute: false,
-    hour: false,
-    day: false,
-    month: false,
-    year: false,
-  });
+  const [fromDurationError, setFromDurationError] = useState(defaultErrorState);
+  const [toDurationError, setToDurationError] = useState(defaultErrorState);
 
   const resetErrors = (): void => {
     setNameError(false);
-    setToDurationError({
-      minute: false,
-      hour: false,
-      day: false,
-      month: false,
-      year: false,
-    });
-    setFromDurationError({
-      minute: false,
-      hour: false,
-      day: false,
-      month: false,
-      year: false,
-    });
+    setToDurationError(defaultErrorState);
+    setFromDurationError(defaultErrorState);
   };
 
   const resetForm = (): void => {
-    setNameValue('');
-    setFromDurationValue({
-      minute: '0',
-      hour: `${selectedDate.getHours()}`,
-      day: `${selectedDate.getDate()}`,
-      month: `${selectedDate.getMonth()}`,
-      year: `${selectedDate.getFullYear()}`,
-    });
-    setToDurationValue({
-      minute: '0',
-      hour: `${selectedDate.getHours()}`,
-      day: `${selectedDate.getDate()}`,
-      month: `${selectedDate.getMonth()}`,
-      year: `${selectedDate.getFullYear()}`,
-    });
-    setColorValue('green');
+    setNameValue(eventToEdit.name);
+    setFromDurationValue(defaultDateValue(selectedDate, eventToEdit.from));
+    setToDurationValue(defaultDateValue(selectedDate, eventToEdit.to));
+    setColorValue(eventToEdit.color);
+    setDescriptionValue(eventToEdit.description);
   };
 
   // Reset form on modal open and close
@@ -217,7 +203,12 @@ const CreateEventModal = ({ show, handleClose }: CreateEventModalProps): JSX.Ele
           from: start.toString(),
           to: end.toString(),
         };
-        dispatch(addDateEvent(finalEvent));
+        if (eventIdToEdit === -1) {
+          dispatch(addDateEvent(finalEvent));
+        } else {
+          finalEvent.id = eventIdToEdit;
+          dispatch(editDateEvent(finalEvent));
+        }
         handleClose();
       }
     }
@@ -293,7 +284,7 @@ const CreateEventModal = ({ show, handleClose }: CreateEventModalProps): JSX.Ele
                 Cancel
               </button>
               <button type="button" className={styles['blue-button']} onClick={handleSubmit}>
-                Create Event
+                {(eventIdToEdit === -1) ? 'Create Event' : 'Edit Event'}
               </button>
             </div>
           </form>

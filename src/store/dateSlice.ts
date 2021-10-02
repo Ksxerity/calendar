@@ -31,6 +31,10 @@ const dateSlice = createSlice({
       }
       state.events.push(action.payload);
     },
+    editDateEvent: (state, action: PayloadAction<IDateEvent>) => {
+      const eventIndex = state.events.findIndex((event) => event.id === action.payload.id);
+      state.events.splice(eventIndex, 1, action.payload);
+    },
     removeDateEvent: (state, action: PayloadAction<number>) => {
       const index: number = state.events.findIndex((element) => element.id === action.payload);
       state.events.splice(index, 1);
@@ -42,6 +46,7 @@ export const {
   changeCalendarView,
   selectNewDate,
   addDateEvent,
+  editDateEvent,
   removeDateEvent,
 } = dateSlice.actions;
 

@@ -1,0 +1,56 @@
+.modal-dialog {
+  .modal-header {
+    margin: 0 auto;
+    font-size: 2.75vh;
+  }
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    font-size: 2.25vh;
+    .display-description {
+      padding-bottom: 10px;
+      text-align: center;
+    }
+    .display-date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .display-to {
+      display: grid;
+      width: 100%;
+      grid-template-columns: minmax(0, 1fr) 10% minmax(0, 1fr);
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      font-size: 2vh;
+      .grid-text {
+        margin: 0 auto;
+        grid-column: 2 / span 1;
+        grid-row: 1 / span 2;
+      }
+      .grid-line {
+        background: linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat;
+      }
+    }
+    .display-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 1.8vh;
+      .delete-button {
+        width: 25%;
+        background-color: white;
+        color: #E74C3C;
+        border: 2px groove #E74C3C;
+      }
+      .edit-button {
+        width: 25%;
+        background-color: white;
+        color: #34495e;
+        border: 2px groove #34495e;
+      }
+    }
+  }
+}
