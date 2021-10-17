@@ -51,8 +51,8 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
   const dispatch = useDispatch<AppDispatch>();
   // Initialize Value State
   const [nameValue, setNameValue] = useState(eventToEdit.name);
-  const [fromDurationValue, setFromDurationValue] = useState(defaultDateValue(selectedDate, eventToEdit.from));
-  const [toDurationValue, setToDurationValue] = useState(defaultDateValue(selectedDate, eventToEdit.to));
+  const [fromDurationValue, setFromDurationValue] = useState(() => defaultDateValue(selectedDate, eventToEdit.from));
+  const [toDurationValue, setToDurationValue] = useState(() => defaultDateValue(selectedDate, eventToEdit.to));
   const [colorValue, setColorValue] = useState(eventToEdit.color);
   const [descriptionValue, setDescriptionValue] = useState(eventToEdit.description);
   // const [repeatingValue, setRepeatingValue] = useState(false);
@@ -75,11 +75,11 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
     setDescriptionValue(eventToEdit.description);
   };
 
-  // Reset form on modal open and close
+  // Reset form on modal open
   useEffect(() => {
     resetErrors();
     resetForm();
-  }, [eventToEdit]);
+  }, [show, eventToEdit]);
 
   const handleSubmit = (): void => {
     let validForm = true;

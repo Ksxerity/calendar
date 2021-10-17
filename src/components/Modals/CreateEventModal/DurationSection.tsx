@@ -34,8 +34,6 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
     setValue,
   } = props;
 
-  console.log(values);
-
   const handleSelection = (name: string, event: React.ChangeEvent<HTMLSelectElement>): void => {
     if (name === 'minute') {
       setValue({
