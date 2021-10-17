@@ -28,7 +28,7 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
     } else {
       setYearError(false);
       const month = parseInt(event.currentTarget.id, 10);
-      const daysInMonth = util.getNumberOfDaysInMonth(month, yearVal);
+      const daysInMonth = util.getNumberOfDaysInMonth((new Date(yearVal, month, 1)));
       const day = selectedDate.getDate() > daysInMonth ? daysInMonth : selectedDate.getDate();
       const newDate = new Date(yearVal, month, day, selectedDate.getHours());
       dispatch(selectNewDate(newDate.toString()));
@@ -93,66 +93,30 @@ const Selector = (): JSX.Element => {
   };
 
   const handleArrowClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    let year = selectedDate.getFullYear();
-    let month = selectedDate.getMonth();
-    let day = selectedDate.getDate();
+    const currentDate = new Date(selectedDate.toString());
+    currentDate.setMinutes(0);
     if (calendarView === 'month') {
+      const numberOfDaysInNewMonth: number = util.getNumberOfDaysInMonth(currentDate);
+      currentDate.setDate(currentDate.getDate() > numberOfDaysInNewMonth ? numberOfDaysInNewMonth : currentDate.getDate());
       if (event.currentTarget.id === 'prev') {
-        const prevMonthAndYear = util.calculatePrevMonthAndYear(month, year);
-        month = prevMonthAndYear.month;
-        year = prevMonthAndYear.year;
+        currentDate.setMonth(currentDate.getMonth() - 1);
       } else if (event.currentTarget.id === 'next') {
-        const nextMonthAndYear = util.calculateNextMonthAndYear(month, year);
-        month = nextMonthAndYear.month;
-        year = nextMonthAndYear.year;
+        currentDate.setMonth(currentDate.getMonth() + 1);
       }
-      const numberOfDaysInNewMonth: number = util.getNumberOfDaysInMonth(month, year);
-      day = day > numberOfDaysInNewMonth ? numberOfDaysInNewMonth : day;
     } else if (calendarView === 'week') {
       if (event.currentTarget.id === 'prev') {
-        if (day - 7 < 1) {
-          const prevMonthAndYear = util.calculatePrevMonthAndYear(month, year);
-          month = prevMonthAndYear.month;
-          year = prevMonthAndYear.year;
-          day -= 7;
-          day += util.getNumberOfDaysInMonth(month, year);
-        } else {
-          day -= 7;
-        }
+        currentDate.setDate(currentDate.getDate() - 7);
       } else if (event.currentTarget.id === 'next') {
-        const currDaysInMonth: number = util.getNumberOfDaysInMonth(month, year);
-        if (day + 7 > currDaysInMonth) {
-          const nextMonthAndYear = util.calculateNextMonthAndYear(month, year);
-          month = nextMonthAndYear.month;
-          year = nextMonthAndYear.year;
-          day += 7;
-          day -= currDaysInMonth;
-        } else {
-          day += 7;
-        }
+        currentDate.setDate(currentDate.getDate() + 7);
       }
     } else if (calendarView === 'day') {
       if (event.currentTarget.id === 'prev') {
-        if (day === 1) {
-          const prevMonthAndYear = util.calculatePrevMonthAndYear(month, year);
-          month = prevMonthAndYear.month;
-          year = prevMonthAndYear.year;
-          day = util.getNumberOfDaysInMonth(month, year);
-        } else {
-          day -= 1;
-        }
+        currentDate.setDate(currentDate.getDate() - 1);
       } else if (event.currentTarget.id === 'next') {
-        if (day === util.getNumberOfDaysInMonth(month, year)) {
-          day = 1;
-          const nextMonthAndYear = util.calculateNextMonthAndYear(month, year);
-          month = nextMonthAndYear.month;
-          year = nextMonthAndYear.year;
-        } else {
-          day += 1;
-        }
+        currentDate.setDate(currentDate.getDate() + 1);
       }
     }
-    dispatch(selectNewDate(new Date(year, month, day).toString()));
+    dispatch(selectNewDate(currentDate.toString()));
   };
 
   return (

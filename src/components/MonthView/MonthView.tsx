@@ -29,6 +29,8 @@ const Week = (props: WeekProps): JSX.Element => {
       const eventId: string = (event.currentTarget.getAttribute('data-event-id') || '');
       if (eventId) {
         showEvent(parseInt(eventId, 10));
+      } else {
+        // Show all events modal
       }
     } else {
       const currentDate: Date = new Date(date);
@@ -75,7 +77,7 @@ const Week = (props: WeekProps): JSX.Element => {
     );
   }
 
-  const eventsRow: Array<JSX.Element> = new Array(5);
+  const eventsRow: Array<JSX.Element> = [];
   const eventsPos: Array<Array<number | null>> = new Array(5).fill(null).map(() => new Array(7).fill(null));
   const events: Array<IDateEvent> = useSelector(util.currentWeekEventSelector(dates, selectedDate));
   events.sort((event1, event2) => {
@@ -112,24 +114,44 @@ const Week = (props: WeekProps): JSX.Element => {
       }
     }
     eventsPos[index].splice(startPos, (endPos - startPos) + 1, ...new Array((endPos - startPos) + 1).fill(event.id));
-    eventsRow.push(
-      <div
-        role="button"
-        style={{
-          gridColumn: `${startPos + 1} / ${endPos + 2}`,
-          gridRow: index + 2,
-        }}
-        className={[
-          styles.event,
-          `${events[i].color}-background`,
-        ].join(' ')}
-        aria-hidden="true"
-        data-event-id={events[i].id}
-        onClick={handleGridClick}
-      >
-        {events[i].name}
-      </div>,
-    );
+    if (eventsRow.length < 4) {
+      eventsRow.push(
+        <div
+          role="button"
+          style={{
+            gridColumn: `${startPos + 1} / ${endPos + 2}`,
+            gridRow: index + 2,
+          }}
+          className={[
+            styles.event,
+            `${events[i].color}-background`,
+          ].join(' ')}
+          aria-hidden="true"
+          data-event-id={events[i].id}
+          onClick={handleGridClick}
+        >
+          {events[i].name}
+        </div>,
+      );
+    } else if (eventsRow.length === 4) {
+      eventsRow.push(
+        <div
+          role="button"
+          style={{
+            gridColumn: `${startPos + 1} / ${endPos + 2}`,
+            gridRow: index + 2,
+          }}
+          className={[
+            styles.event,
+            styles['additional-events'],
+          ].join(' ')}
+          aria-hidden="true"
+          onClick={handleGridClick}
+        >
+          ...
+        </div>,
+      );
+    }
   }
 
   return (

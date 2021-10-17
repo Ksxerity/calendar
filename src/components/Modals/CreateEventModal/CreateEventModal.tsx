@@ -28,7 +28,7 @@ const defaultEventToEdit: IDateEvent = {
 const defaultDateValue = (selectedDate: Date, eventDate: string) => {
   const dateObj: Date = (eventDate === '') ? selectedDate : new Date(eventDate);
   return {
-    minute: '0',
+    minute: `${dateObj.getMinutes()}`,
     hour: `${dateObj.getHours()}`,
     day: `${dateObj.getDate()}`,
     month: `${dateObj.getMonth()}`,
@@ -79,7 +79,7 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
   useEffect(() => {
     resetErrors();
     resetForm();
-  }, [show]);
+  }, [eventToEdit]);
 
   const handleSubmit = (): void => {
     let validForm = true;

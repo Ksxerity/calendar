@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IDateEvent, DateState } from './dateTypes';
+import demoEvents from './demoEvents';
 
 const initialState: DateState = {
   selectedDate: new Date().toString(),
   calendarView: 'month',
-  events: [],
+  events: demoEvents,
 };
 
 const dateSlice = createSlice({

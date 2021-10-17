@@ -17,23 +17,19 @@ const Day = ({ date, selectedDate }: WeekProps): JSX.Element => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const style: string = (event.currentTarget.getAttribute('style') || '');
     const day = parseInt(event.currentTarget.innerHTML, 10);
-    let month = selectedDate.getMonth();
-    let year = selectedDate.getFullYear();
+    const currentDate = new Date(selectedDate.toString());
+    currentDate.setDate(day);
     if (style) {
       let color: string = style.split(':')[1].trim();
       color = color.slice(0, color.length - 1);
       if (color === 'gray') {
         if (day > 15) {
-          const prevMonthAndYear = util.calculatePrevMonthAndYear(month, year);
-          month = prevMonthAndYear.month;
-          year = prevMonthAndYear.year;
+          currentDate.setMonth(currentDate.getMonth() - 1);
         } else {
-          const nextMonthAndYear = util.calculateNextMonthAndYear(month, year);
-          month = nextMonthAndYear.month;
-          year = nextMonthAndYear.year;
+          currentDate.setMonth(currentDate.getMonth() + 1);
         }
       }
-      dispatch(selectNewDate(new Date(year, month, day, selectedDate.getHours()).toString()));
+      dispatch(selectNewDate(currentDate.toString()));
     }
   };
 

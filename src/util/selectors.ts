@@ -1,7 +1,7 @@
 import { createSelector, OutputSelector } from 'reselect';
 import { DateState, IDateEvent } from '../store/dateTypes';
 import { RootState } from '../store/store';
-import { calculateNextMonthAndYear, calculatePrevMonthAndYear, DayType } from './util';
+import { DayType } from './util';
 
 type EventsSelector = OutputSelector<{ date: DateState; }, IDateEvent[], (res: IDateEvent[]) => IDateEvent[]>;
 type EventSelector = OutputSelector<{ date: DateState; }, IDateEvent | undefined, (res: IDateEvent[]) => IDateEvent | undefined>;
@@ -47,14 +47,12 @@ export const currentWeekEventSelector = (dates: Array<DayType>, selectedDate: Da
       eventEndDate.setMinutes(0);
       if (dates[0].color === 'gray') {
         // Week contains days from previous month
-        const prevMonthAndYear = calculatePrevMonthAndYear(selectedDate.getMonth(), selectedDate.getFullYear());
-        startDate = new Date(prevMonthAndYear.year, prevMonthAndYear.month, dates[0].date.getDate());
+        startDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, dates[0].date.getDate());
         endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[6].date.getDate(), 23, 59);
       } else if (dates[6].color === 'gray') {
         // Week contains days from next month
-        const nextMonthAndYear = calculateNextMonthAndYear(selectedDate.getMonth(), selectedDate.getFullYear());
         startDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[0].date.getDate());
-        endDate = new Date(nextMonthAndYear.year, nextMonthAndYear.month, dates[6].date.getDate(), 23, 59);
+        endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, dates[6].date.getDate(), 23, 59);
       } else {
         startDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[0].date.getDate());
         endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), dates[6].date.getDate(), 23, 59);
