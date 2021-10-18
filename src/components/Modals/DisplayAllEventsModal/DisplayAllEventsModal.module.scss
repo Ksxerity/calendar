@@ -1,0 +1,20 @@
+.modal-dialog {
+  .modal-header {
+    margin: 0 auto;
+    font-size: 2.75vh;
+  }
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    font-size: 2.25vh;
+    .display-container {
+      display: flex;
+      flex-direction: column;
+      row-gap: 3px;
+      .display-event {
+        border-radius: 5px;
+        padding-left: 5px;
+      }
+    }
+  }
+}

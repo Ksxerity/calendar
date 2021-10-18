@@ -13,6 +13,7 @@ import {
   currentWeekEventSelector,
   dayEventSelector,
   eventIdSelector,
+  eventSorting,
 } from './selectors';
 
 export type {
@@ -30,4 +31,5 @@ export {
   currentWeekEventSelector,
   dayEventSelector,
   eventIdSelector,
+  eventSorting,
 };

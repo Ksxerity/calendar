@@ -115,3 +115,31 @@ export const eventIdSelector = (eventId: number): EventSelector => {
   );
   return selector;
 };
+
+export const eventSorting = (event1: IDateEvent, event2: IDateEvent): number => {
+  // Sort by start time. Multi-day events are prioritized.
+  const event1Start = new Date(event1.from);
+  const event2Start = new Date(event2.from);
+  const event1End = new Date(event1.to);
+  const event2End = new Date(event2.to);
+  if (event1Start.getFullYear() === event1End.getFullYear()
+    && event1Start.getMonth() === event1End.getMonth()
+    && event1Start.getDate() === event1End.getDate()) {
+    if (event2Start.getFullYear() === event2End.getFullYear()
+      && event2Start.getMonth() === event2End.getMonth()
+      && event2Start.getDate() === event2End.getDate()) {
+      // If both events start and end on the same day respectively, sort by start time
+      return event1Start.valueOf() - event2Start.valueOf();
+    }
+    // Event 1 starts on the same day, so put it after (multi-day) event 2
+    return 1;
+  }
+  if (event2Start.getFullYear() === event2End.getFullYear()
+    && event2Start.getMonth() === event2End.getMonth()
+    && event2Start.getDate() === event2End.getDate()) {
+    // Event 2 starts on the same day, so put it after (multi-day) event 1
+    return -1;
+  }
+  // else sort by duration
+  return ((event2End.valueOf() - event2Start.valueOf()) - (event1End.valueOf() - event1Start.valueOf()));
+};
