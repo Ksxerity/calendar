@@ -77,7 +77,10 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
           <div className={styles['selection-label']}>
             Minute
           </div>
-          <select onChange={(e) => handleSelection('minute', e)} defaultValue={values.minute}>
+          <select
+            onChange={(e) => handleSelection('minute', e)}
+            defaultValue={values.minute}
+          >
             <option value="0">0</option>
             <option value="15">15</option>
             <option value="30">30</option>
@@ -93,7 +96,11 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
           <div className={styles['selection-label']}>
             Month
           </div>
-          <select onChange={(e) => handleSelection('month', e)} defaultValue={values.month}>
+          <select
+            onChange={(e) => handleSelection('month', e)}
+            defaultValue={values.month}
+            className={styles['drop-down-month']}
+          >
             <option value="0">January</option>
             <option value="1">February</option>
             <option value="2">March</option>

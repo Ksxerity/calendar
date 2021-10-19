@@ -29,14 +29,19 @@
           width: 100%;
           color: #34495e;
           border-color: #34495e;
+          margin-top: -3px;
           .selection-label {
-            padding-top: 7px;
+            padding-top: 10px;
             padding-left: 4px;
-            margin-bottom: -3px;
+            margin-bottom: -6px;
             font-size: calc(1.8vh * .75);
             color: inherit;
           }
           select {
+            -webkit-appearance: none;
+            padding-left: 5px;
+            margin-top: 7px;
+            line-height: 17px;
             width: 100%;
             border: 0;
             border-bottom: 2px;
@@ -44,6 +49,9 @@
             border-color: inherit;
             outline: none !important;
             background-color: white;
+          }
+          .drop-down-month {
+            line-height: 18px;
           }
           &.selection-error {
             color: red !important;
