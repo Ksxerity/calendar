@@ -166,3 +166,13 @@ export const isValidHour = (hour: number): boolean => {
   if (hour > 23) return false;
   return true;
 };
+
+export const hourTostring = (hour: string | number): string => {
+  const hourNumber = Number.parseInt(`${hour}`, 10);
+  if (hourNumber === 0) {
+    return '00';
+  } else if ( hourNumber < 10) {
+    return `0${hour}`;
+  }
+  return `${hour}`;
+}

@@ -21,3 +21,33 @@ export type DateState = {
   calendarView: string,
   events: IDateEvent[]
 };
+
+interface ChangeCalendarViewAction {
+  type: 'changeCalendarView';
+}
+
+interface SelectNewDateAction {
+  type: 'selectNewDate';
+  payload: string;
+}
+
+interface AddDateEventAction {
+  type: 'addDateEvent';
+  payload: IDateEvent;
+}
+
+interface EditDateEventAction {
+  type: 'editDateEvent';
+  payload: IDateEvent;
+}
+
+interface RemoveDateEventAction {
+  type: 'removeDateEvent';
+  payload: number;
+}
+
+export type ActionTypes = ChangeCalendarViewAction | 
+                          SelectNewDateAction | 
+                          AddDateEventAction |
+                          EditDateEventAction |
+                          RemoveDateEventAction;

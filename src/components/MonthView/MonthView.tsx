@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { selectNewDate } from '../../store/dateSlice';
-import { IDateEvent, IEventTime } from '../../store/dateTypes';
 import { CreateEventModal, DisplayAllEventsModal, DisplayEventModal } from '../Modals';
 import * as util from '../../util';
-import styles from './MonthView.module.scss';
+import { useNonNullContext } from '@/store/calendarContext';
+import { IDateEvent } from '@/store/dateTypes';
 
 type WeekProps = {
   dates: Array<util.DayType>,
@@ -16,6 +13,7 @@ type WeekProps = {
 };
 
 const Week = (props: WeekProps): JSX.Element => {
+  const dispatch = useNonNullContext('dispatch');
   const {
     dates,
     last,
@@ -23,7 +21,6 @@ const Week = (props: WeekProps): JSX.Element => {
     showEvent,
     showAllEvents,
   } = props;
-  const dispatch = useDispatch<AppDispatch>();
 
   const handleGridClick = (event: React.MouseEvent<HTMLDivElement>): void => {
     const date: string = (event.currentTarget.getAttribute('data-date') || '');
@@ -35,30 +32,42 @@ const Week = (props: WeekProps): JSX.Element => {
         const eventDate: string = (event.currentTarget.getAttribute('data-event-date') || '');
         const currentDate: Date = new Date(eventDate);
         currentDate.setHours(selectedDate.getHours());
-        dispatch(selectNewDate(currentDate.toString()));
+        dispatch({ type: 'selectNewDate', payload: currentDate.toString() });
         showAllEvents();
       }
     } else {
       const currentDate: Date = new Date(date);
       currentDate.setHours(selectedDate.getHours());
-      dispatch(selectNewDate(currentDate.toString()));
+      dispatch({ type: 'selectNewDate', payload: currentDate.toString() });
     }
   };
 
   const grid: Array<JSX.Element> = [];
   const datesRow: Array<JSX.Element> = [];
+  const getLinearGradient = (index: number) => {
+    if (last) {
+      if (index !== 0) {
+        return 'linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat';
+      }
+    } else {
+      if (index !== 0) {
+        return 'linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat, linear-gradient(lightgray, lightgray) left / 2px 80% no-repeat';
+      } else {
+        return 'linear-gradient(lightgray, lightgray) bottom / 80% 2px no-repeat';
+      }
+    }
+    return 'none';
+  }
   for (let i = 0; i < dates.length; i++) {
     grid.push(
       <div
+        key={`grid-${dates[i].date}-${i}`}
         role="button"
         style={{
           gridColumnStart: i + 1,
+          background: getLinearGradient(i)
         }}
-        className={[
-          styles['grid-box'],
-          last ? styles.last : null,
-          (dates[i].date.getDate() === selectedDate.getDate() && dates[i].color === 'black') ? styles.selected : null,
-        ].join(' ')}
+        className={`row-start-1 row-end-7 rounded-[10px] border-none overflow-hidden ${(dates[i].date.getDate() === selectedDate.getDate() && dates[i].color === 'black') ? '!bg-[lightsteelblue]' : 'hover:!bg-[#e3e3e3]'}`}
         aria-hidden="true"
         data-color={dates[i].color}
         data-date={dates[i].date}
@@ -67,6 +76,7 @@ const Week = (props: WeekProps): JSX.Element => {
     );
     datesRow.push(
       <div
+        key={`datesrow-${dates[i].date}-${i}`}
         role="button"
         aria-hidden="true"
         data-color={dates[i].color}
@@ -75,7 +85,7 @@ const Week = (props: WeekProps): JSX.Element => {
           color: dates[i].color,
           gridColumnStart: i + 1,
         }}
-        className={styles.date}
+        className='row-start-1 pl-[10px] text-[1.25vw] leading-[20px]'
         onClick={handleGridClick}
       >
         {(new Date(dates[i].date)).getDate()}
@@ -85,7 +95,7 @@ const Week = (props: WeekProps): JSX.Element => {
 
   const eventsRow: Array<JSX.Element> = [];
   const eventsPos: Array<Array<number | null>> = new Array(5).fill(null).map(() => new Array(7).fill(null));
-  const events: Array<IDateEvent> = useSelector(util.currentWeekEventSelector(dates, selectedDate));
+  const events: Array<IDateEvent> = util.getCurrentWeekEvents(dates, selectedDate);
   events.sort(util.eventSorting);
   const firstDayOfWeek: Date = new Date(dates[0].date);
   const lastDayOfWeek: Date = new Date(dates[dates.length - 1].date);
@@ -109,15 +119,13 @@ const Week = (props: WeekProps): JSX.Element => {
       eventsPos[index].splice(startPos, (endPos - startPos) + 1, ...new Array((endPos - startPos) + 1).fill(event.id));
       eventsRow.push(
         <div
+          key={`eventsrow-${events[i].id}-${dates[0].date}`}
           role="button"
           style={{
             gridColumn: `${startPos + 1} / ${endPos + 2}`,
             gridRow: index + 2,
           }}
-          className={[
-            styles.event,
-            styles['additional-events'],
-          ].join(' ')}
+          className='inline-block items-center m-l-px pl-[5px] rounded-[3px] pr-[3px] overflow-hidden whitespace-nowrap text-ellipsis leading-[16px] text-[.9vw] bg-[lightgray]'
           aria-hidden="true"
           data-event-date={events[i].from}
           onClick={handleGridClick}
@@ -135,15 +143,13 @@ const Week = (props: WeekProps): JSX.Element => {
       }
       eventsRow.push(
         <div
+          key={`eventsrow-${events[i].id}-${dates[0].date}`}
           role="button"
           style={{
             gridColumn: `${startPos + 1} / ${endPos + 2}`,
             gridRow: index + 2,
           }}
-          className={[
-            styles.event,
-            `${events[i].color}-background`,
-          ].join(' ')}
+          className={`inline-block items-center m-l-px pl-[5px] rounded-[3px] pr-[3px] overflow-hidden whitespace-nowrap text-ellipsis leading-[16px] text-[.9vw] bg-custom-${events[i].color}`}
           aria-hidden="true"
           data-event-id={events[i].id}
           onClick={handleGridClick}
@@ -155,7 +161,7 @@ const Week = (props: WeekProps): JSX.Element => {
   }
 
   return (
-    <div className={styles['week-row']}>
+    <div className='grid grid-cols-7 grid-rows-[23%_repeat(5,_minmax(0,_1fr))] gap-y-px'>
       {grid}
       {datesRow}
       {eventsRow}
@@ -164,11 +170,12 @@ const Week = (props: WeekProps): JSX.Element => {
 };
 
 const MonthView = (): JSX.Element => {
+  const calendar = useNonNullContext('state');
   const [showDisplayModal, setShowDisplayModal] = useState(false);
   const [showDisplayAllModal, setShowDisplayAllModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [modalEventId, setModalEventId] = useState(-1);
-  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
+  const selectedDate = new Date(calendar.selectedDate);
   const daysInMonth: Array<Array<util.DayType>> = util.getMonthArray(selectedDate);
 
   const showEvent = (eventId: number) => {
@@ -182,14 +189,14 @@ const MonthView = (): JSX.Element => {
 
   const week: Array<JSX.Element> = [];
   week.push(
-    <div key="days_of_week-row" className={styles['days-of-week-row']}>
-      <div className={styles['day-of-week']}>Sunday</div>
-      <div className={styles['day-of-week']}>Monday</div>
-      <div className={styles['day-of-week']}>Tuesday</div>
-      <div className={styles['day-of-week']}>Wednesday</div>
-      <div className={styles['day-of-week']}>Thursday</div>
-      <div className={styles['day-of-week']}>Friday</div>
-      <div className={styles['day-of-week']}>Saturday</div>
+    <div key="days_of_week-row" className='flex flow-row text-center'>
+      <div className='grow'>Sunday</div>
+      <div className='grow'>Monday</div>
+      <div className='grow'>Tuesday</div>
+      <div className='grow'>Wednesday</div>
+      <div className='grow'>Thursday</div>
+      <div className='grow'>Friday</div>
+      <div className='grow'>Saturday</div>
     </div>,
   );
   for (let i = 0; i < daysInMonth.length; i++) {
@@ -207,11 +214,11 @@ const MonthView = (): JSX.Element => {
 
   let monthView: string;
   if (daysInMonth.length === 4) {
-    monthView = styles['month-4'];
+    monthView = 'grid h-full grid-cols-[100%] grid-rows-[3%_repeat(4,_minmax(0,_1fr))]';
   } else if (daysInMonth.length === 5) {
-    monthView = styles['month-5'];
+    monthView = 'grid h-full grid-cols-[100%] grid-rows-[3%_repeat(5,_minmax(0,_1fr))]';
   } else {
-    monthView = styles['month-6'];
+    monthView = 'grid h-full grid-cols-[100%] grid-rows-[3%_repeat(6,_minmax(0,_1fr))]';
   }
 
   let modal = null;
@@ -240,7 +247,7 @@ const MonthView = (): JSX.Element => {
   }
 
   return (
-    <div className={monthView}>
+    <div className={`${monthView}`}>
       {modal}
       {week}
     </div>

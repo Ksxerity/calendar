@@ -1,9 +1,7 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import Modal from 'react-bootstrap/Modal';
+import React, { JSX } from 'react';
 import { IDateEvent } from '../../../store/dateTypes';
 import * as util from '../../../util';
-import styles from './DisplayAllEventsModal.module.scss';
+import { Dialog, DialogHeader, DialogBody } from '@material-tailwind/react';
 
 type DisplayAllEventsModalProps = {
   selectedDateString: string,
@@ -40,7 +38,7 @@ const DisplayAllEventsModal = (props: DisplayAllEventsModalProps): JSX.Element =
   };
 
   const eventArray: Array<JSX.Element> = [];
-  const events: Array<IDateEvent> = useSelector(util.dayEventSelector(selectedDate));
+  const events: Array<IDateEvent> = util.getEventByDate(selectedDate);
   events.sort(util.eventSorting);
   for (let i = 0; i < events.length; i++) {
     const dateStart: Date = new Date(events[i].from);
@@ -60,9 +58,9 @@ const DisplayAllEventsModal = (props: DisplayAllEventsModalProps): JSX.Element =
       <div
         role="button"
         aria-hidden="true"
-        className={[styles['display-event'], `${events[i].color}-background`].join(' ')}
         onClick={handleClick}
         data-event-id={events[i].id}
+        className={`bg-custom-${events[i].color} rounded-[5px] pl-[5px] text-black`}
       >
         {eventName}
       </div>,
@@ -70,18 +68,14 @@ const DisplayAllEventsModal = (props: DisplayAllEventsModalProps): JSX.Element =
   }
 
   return (
-    <Modal show={show} onHide={handleClose} dialogClassName={styles['modal-dialog']}>
-      <Modal.Header>
-        <div className={styles['modal-header']}>
-          {`All events on ${populateEventDateLabel(selectedDate)}`}
-        </div>
-      </Modal.Header>
-      <Modal.Body className={styles['modal-body']}>
-        <div className={styles['display-container']}>
-          {eventArray}
-        </div>
-      </Modal.Body>
-    </Modal>
+    <Dialog open={show} handler={handleClose}>
+      <DialogHeader>
+        {`All events on ${populateEventDateLabel(selectedDate)}`}
+      </DialogHeader>
+      <DialogBody className='flex flex-col gap-[3px]'>
+        {eventArray}
+      </DialogBody>
+  </Dialog>
   );
 };
 

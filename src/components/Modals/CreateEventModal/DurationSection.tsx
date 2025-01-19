@@ -1,7 +1,6 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
-import styles from './CreateEventModal.module.scss';
+import { getNumberOfDaysInMonth, hourTostring } from '@/util';
+import { Input, Option, Select } from '@material-tailwind/react';
+import React, { JSX, useMemo, useState } from 'react';
 
 type DurationErrors = {
   minute: boolean,
@@ -33,119 +32,131 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
     errors,
     setValue,
   } = props;
+  const [selectedTime, setSelectedTime] = useState(`${hourTostring(values.hour)}:00`);
+  const [selectedMonth, setSelectedMonth] = useState(values.month);
+  const [selectedDay, setSelectedDay] = useState(values.day);
+  const [selectedYear, setSelectedYear] = useState(values.year);
 
-  const handleSelection = (name: string, event: React.ChangeEvent<HTMLSelectElement>): void => {
-    if (name === 'minute') {
-      setValue({
-        ...values,
-        minute: event.target.value,
-      });
-    } else if (name === 'month') {
-      setValue({
-        ...values,
-        month: event.currentTarget.value,
-      });
+  const generateTimeOptions = useMemo(() => {
+    const times: JSX.Element[] = [];
+    for (let hour = 0; hour < 24; hour += 1) {
+      for (let min = 0; min <= 45; min += 15) {
+        const str = `${hourTostring(hour)}:${min === 0 ? '00' : min}`;
+        times.push(<Option key={str} value={str}>{str}</Option>)
+      }
     }
-  };
+    return times;
+  }, []);
+
+  const generateDayOptions = useMemo(() => {
+    const date = new Date(
+      parseFloat(values.year),
+      parseFloat(values.month),
+      1,
+    );
+    const numberOfDays = getNumberOfDaysInMonth(date);
+    const days: JSX.Element[] = [];
+    for (let day = 1; day <= numberOfDays; day += 1) {
+      days.push(<Option key={`day${day}`} value={`${day}`}>{day}</Option>)
+    }
+    return days;
+  }, []);
+
+  const generateYearOptions = useMemo(() => {
+    const currYear = parseFloat(values.year);
+    const years: JSX.Element[] = [];
+    for (let year = currYear - 30; year < currYear + 30; year += 1) {
+      years.push(<Option key={`year${year}`} value={`${year}`}>{year}</Option>)
+    }
+    return years;
+  }, []);
 
   return (
-    <div className={styles['duration-section']}>
-      <div className={styles['duration-type']}>
+    <div className='flex flex-col'>
+      <div>
         {type}
       </div>
-      <div className={styles['duration-time']}>
-        <div className={['form-group', 'form-input'].join(' ')}>
-          <input
-            type="number"
-            name="hour"
-            className={[
-              'form-group',
-              errors.hour ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
-            placeholder="Hour"
-            onChange={(event) => setValue({
-              ...values,
-              hour: event.currentTarget.value,
-            })}
-            value={values.hour}
-          />
-          <label htmlFor="hour">Hour</label>
-        </div>
-        <div className={[
-          styles.selection,
-          errors.minute ? styles['selection-error'] : null].join(' ')}
-        >
-          <div className={styles['selection-label']}>
-            Minute
-          </div>
-          <select
-            onChange={(e) => handleSelection('minute', e)}
-            defaultValue={values.minute}
+      <div className='flex gap-x-[5px]'>
+        <div className='w-28'>
+          <Select
+            label='Month'
+            onChange={(event) => {
+              if (event) {
+                setValue({
+                  ...values,
+                  month: event,
+                });
+                setSelectedMonth(event);
+              }
+            }}
+            value={selectedMonth}
           >
-            <option value="0">0</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="45">45</option>
-          </select>
+            <Option value="0">January</Option>
+            <Option value="1">February</Option>
+            <Option value="2">March</Option>
+            <Option value="3">April</Option>
+            <Option value="4">May</Option>
+            <Option value="5">June</Option>
+            <Option value="6">July</Option>
+            <Option value="7">August</Option>
+            <Option value="8">September</Option>
+            <Option value="9">October</Option>
+            <Option value="10">November</Option>
+            <Option value="11">December</Option>
+          </Select>
         </div>
-      </div>
-      <div className={styles['duration-date']}>
-        <div className={[
-          styles.selection,
-          errors.minute ? styles['selection-error'] : null].join(' ')}
-        >
-          <div className={styles['selection-label']}>
-            Month
-          </div>
-          <select
-            onChange={(e) => handleSelection('month', e)}
-            defaultValue={values.month}
-            className={styles['drop-down-month']}
+        <div className='w-20'>
+          <Select
+            label='Day'
+            onChange={(event) => {
+              if (event) {
+                setValue({
+                  ...values,
+                  day: event,
+                })
+                setSelectedDay(event);
+              }
+            }}
+            value={selectedDay}
           >
-            <option value="0">January</option>
-            <option value="1">February</option>
-            <option value="2">March</option>
-            <option value="3">April</option>
-            <option value="4">May</option>
-            <option value="5">June</option>
-            <option value="6">July</option>
-            <option value="7">August</option>
-            <option value="8">September</option>
-            <option value="9">October</option>
-            <option value="10">November</option>
-            <option value="11">December</option>
-          </select>
+            {generateDayOptions}
+          </Select>
         </div>
-        <div className={['form-group', 'form-input', styles.day].join(' ')}>
-          <input
-            type="number"
-            id={`day_${type}`}
-            className={[
-              'form-group',
-              errors.day ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
-            placeholder="Day"
-            onChange={(event) => setValue({
-              ...values,
-              day: event.currentTarget.value,
-            })}
-            value={values.day}
-          />
-          <label htmlFor={`day_${type}`}>Day</label>
+        <div className='w-24'>
+          <Select
+            label='Year'
+            onChange={(event) => {
+              if (event) {
+                setValue({
+                  ...values,
+                  year: event,
+                })
+                setSelectedYear(event);
+              }
+            }}
+            value={selectedYear}
+          >
+            {generateYearOptions}
+          </Select>
         </div>
-        <div className={['form-group', 'form-input', styles.year].join(' ')}>
-          <input
-            type="number"
-            name="year"
-            className={[
-              'form-group',
-              errors.year ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
-            placeholder="Year"
-            onChange={(event) => setValue({
-              ...values,
-              year: event.currentTarget.value,
-            })}
-            value={values.year}
-          />
-          <label htmlFor="year">Year</label>
+        <div className='w-24'>
+          <Select
+            label='Time'
+            onChange={(event) => {
+              if (event) {
+                const [hour, min] = event.split(':');
+                setValue({
+                  ...values,
+                  minute: min,
+                  hour: hour,
+                })
+                setSelectedTime(event);
+              }
+            }}
+            value={selectedTime}
+          >
+            {generateTimeOptions}
+          </Select>
         </div>
       </div>
     </div>

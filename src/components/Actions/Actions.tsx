@@ -1,8 +1,4 @@
-import React, { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { changeCalendarView, selectNewDate } from '../../store/dateSlice';
+import React, { JSX, useContext, useState } from 'react';
 import * as util from '../../util';
 import { CreateEventModal } from '../Modals';
 import {
@@ -11,17 +7,20 @@ import {
   NewEventIcon,
   SettingsIcon,
 } from '../../assets';
-import styles from './Actions.module.scss';
+import { useNonNullContext } from '@/store/calendarContext';
+import { StaticImageData } from 'next/image';
+import Image from 'next/image';
+import { Button, Tooltip, Typography } from '@material-tailwind/react';
 
 type ActionButtonProps = {
-  src: string,
+  src: StaticImageData,
   id: string,
   alt: string,
   setShow: ((show: boolean) => void) | null,
 };
 
 const ActionButton = (props: ActionButtonProps): JSX.Element => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useNonNullContext('dispatch');
   const {
     src,
     id,
@@ -31,11 +30,12 @@ const ActionButton = (props: ActionButtonProps): JSX.Element => {
 
   const returnToCurrentDate = (): void => {
     const dateObject: Date = util.getCurrentDate();
-    dispatch(selectNewDate(dateObject.toString()));
+    dispatch({type: 'selectNewDate', payload: dateObject.toString()});
   };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const eventId = event.currentTarget.id;
+
     switch (eventId) {
       case 'NewEvent':
         if (setShow !== null) {
@@ -46,7 +46,7 @@ const ActionButton = (props: ActionButtonProps): JSX.Element => {
         returnToCurrentDate();
         break;
       case 'CalendarView':
-        dispatch(changeCalendarView());
+        dispatch({type: 'changeCalendarView'});
         break;
       case 'Settings':
         if (setShow !== null) {
@@ -59,9 +59,25 @@ const ActionButton = (props: ActionButtonProps): JSX.Element => {
   };
 
   return (
-    <button type="button" id={id} data-tooltip={alt} className={styles['action-icon']} onClick={handleClick}>
-      <img src={src} alt={alt} className={styles.icon} />
-    </button>
+    <Tooltip
+      placement="bottom"
+      className="border border-blue-gray-50 bg-white px-4 py-3 shadow-xl shadow-black/10"
+      content={
+        <Typography color="blue-gray">
+          {alt}
+        </Typography>
+      }
+    >
+      <Button 
+        variant="text" 
+        id={id} 
+        data-tooltip={alt} 
+        onClick={handleClick}
+        className="p-[3px]"
+      >
+        <Image src={src} alt={alt} className='max-h-[5vh] max-w-[5vh] rounded-[50%] p-[.2rem] border-[3px] border-[#63b0e3] hover:bg-[#e3e3e3]' />
+      </Button>
+    </Tooltip>
   );
 };
 
@@ -82,12 +98,12 @@ const Actions = (): JSX.Element => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className='flex justify-between items-center m-1.5'>
       <CreateEventModal show={showEventModal} handleClose={() => setShowEventModal(false)} />
-      <div className={styles.date}>
+      <Typography className='text-[#34495e] md:text-xl lg:text-2xl xl:text-3xl'>
         {populateCurrentDateLabel()}
-      </div>
-      <div className={styles.actions}>
+      </Typography>
+      <div>
         <ActionButton
           src={NewEventIcon}
           id="NewEvent"

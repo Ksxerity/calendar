@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { selectNewDate } from '../../store/dateSlice';
 import * as util from '../../util';
-import styles from './Selector.module.scss';
 import {
   LeftArrowIcon,
   RightArrowIcon,
 } from '../../assets';
+import { useNonNullContext } from '@/store/calendarContext';
+import { Dialog, DialogHeader, DialogBody, Button } from '@material-tailwind/react';
+import Image from 'next/image';
 
 type SelectionModalProps = {
   show: boolean,
@@ -16,8 +14,9 @@ type SelectionModalProps = {
 };
 
 const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element => {
-  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useNonNullContext('dispatch');
+  const calendar = useNonNullContext('state');
+  const selectedDate = new Date(calendar.selectedDate);
   const [yearError, setYearError] = useState(false);
   const [yearValue, setYearValue] = useState(`${selectedDate.getFullYear()}`);
 
@@ -31,52 +30,48 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
       const daysInMonth = util.getNumberOfDaysInMonth((new Date(yearVal, month, 1)));
       const day = selectedDate.getDate() > daysInMonth ? daysInMonth : selectedDate.getDate();
       const newDate = new Date(yearVal, month, day, selectedDate.getHours());
-      dispatch(selectNewDate(newDate.toString()));
+      dispatch({ type: 'selectNewDate', payload: newDate.toString() });
       handleClose();
     }
   };
 
+  const generateMonthElements = () => {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const monthElements: JSX.Element[] = [];
+    for (let i = 0; i < months.length; i += 1) {
+      monthElements.push(<Button key={`${months[i]}`} id={`${i}`} className='m-[2px] bg-transparent border-1 border-solid border-[lightgray] rounded-[5px] text-lg text-[#34495e] hover:bg-[#e3e3e3]' onClick={handleSubmit}>{months[i]}</Button>)
+    }
+    return monthElements;
+  }
+
   return (
-    <Modal show={show} onHide={handleClose} dialogClassName={styles['modal-dialog']}>
-      <Modal.Header>
+    <Dialog open={show} handler={handleClose}>
+      <DialogHeader>
         <form noValidate={true} onSubmit={(e) => e.preventDefault()} autoComplete="off">
-          <div className={['form-group', 'form-input'].join(' ')}>
-            <input
-              type="number"
-              id="yearInput"
-              name="year"
-              className={['form-group', yearError ? ['input-error', styles['input-error']].join(' ') : null].join(' ')}
-              placeholder="Year"
-              onChange={(event) => setYearValue(event.currentTarget.value)}
-              value={yearValue}
-            />
-            <label htmlFor="yearInput">Year</label>
-          </div>
+          <input
+            type="number"
+            id="yearInput"
+            name="year"
+            placeholder="Year"
+            onChange={(event) => setYearValue(event.currentTarget.value)}
+            value={yearValue}
+          />
+          <label className={`${yearError ? 'after:content-[" (Invalid Year (Do not precede 1970))"]' : ''}`} htmlFor="yearInput">Year</label>
         </form>
-      </Modal.Header>
-      <Modal.Body className={styles['modal-body']}>
-        <button type="button" id="0" className={styles.month} onClick={handleSubmit}>January</button>
-        <button type="button" id="1" className={styles.month} onClick={handleSubmit}>February</button>
-        <button type="button" id="2" className={styles.month} onClick={handleSubmit}>March</button>
-        <button type="button" id="3" className={styles.month} onClick={handleSubmit}>April</button>
-        <button type="button" id="4" className={styles.month} onClick={handleSubmit}>May</button>
-        <button type="button" id="5" className={styles.month} onClick={handleSubmit}>June</button>
-        <button type="button" id="6" className={styles.month} onClick={handleSubmit}>July</button>
-        <button type="button" id="7" className={styles.month} onClick={handleSubmit}>August</button>
-        <button type="button" id="8" className={styles.month} onClick={handleSubmit}>September</button>
-        <button type="button" id="9" className={styles.month} onClick={handleSubmit}>October</button>
-        <button type="button" id="10" className={styles.month} onClick={handleSubmit}>November</button>
-        <button type="button" id="11" className={styles.month} onClick={handleSubmit}>December</button>
-      </Modal.Body>
-    </Modal>
+      </DialogHeader>
+      <DialogBody>
+        {generateMonthElements()}
+      </DialogBody>
+    </Dialog>
   );
 };
 
 const Selector = (): JSX.Element => {
+  const dispatch = useNonNullContext('dispatch');
+  const calendar = useNonNullContext('state');
   const [show, setShow] = useState(false);
-  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
-  const calendarView = useSelector((state: RootState) => state.date.calendarView);
-  const dispatch = useDispatch<AppDispatch>();
+  const selectedDate = new Date(calendar.selectedDate);
+  const calendarView = calendar.calendarView;
 
   const populateMonthLabel = (): string => {
     let monthLabel: string = selectedDate.toLocaleString('default', { month: 'long' });
@@ -116,21 +111,21 @@ const Selector = (): JSX.Element => {
         currentDate.setDate(currentDate.getDate() + 1);
       }
     }
-    dispatch(selectNewDate(currentDate.toString()));
+    dispatch({ type:'selectNewDate', payload: currentDate.toString() })
   };
 
   return (
-    <div className={styles.selector}>
+    <div style={{ borderStyle: 'groove' }} className='w-[85%] border-t-2 border-[#BDC3C7] flex justify-between m-0 m-auto'>
       <SelectionModal show={show} handleClose={() => setShow(false)} />
-      <button id="prev" type="button" className={styles['arrow-button']} onClick={handleArrowClick}>
-        <img src={LeftArrowIcon} alt="Left arrow button" className={styles['arrow-icon']} />
-      </button>
-      <button type="button" className={styles['select-month']} onClick={() => setShow(true)}>
+      <Button variant="text" id="prev" onClick={handleArrowClick} className='hover:bg-[#e3e3e3]'>
+        <Image src={LeftArrowIcon} alt="Left arrow button" className='max-h-[11vh]' />
+      </Button>
+      <Button variant="text" onClick={() => setShow(true)} className='md:text-xl lg:text-2xl xl:text-3xl text-[#34495e] hover:bg-[#e3e3e3]'>
         {populateMonthLabel()}
-      </button>
-      <button id="next" type="button" className={styles['arrow-button']} onClick={handleArrowClick}>
-        <img src={RightArrowIcon} alt="Right arrow button" className={styles['arrow-icon']} />
-      </button>
+      </Button>
+      <Button variant="text" id="next" onClick={handleArrowClick} className='hover:bg-[#e3e3e3]'>
+        <Image src={RightArrowIcon} alt="Right arrow button" className='max-h-[11vh]' />
+      </Button>
     </div>
   );
 };

@@ -1,31 +1,29 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { selectNewDate } from '../../store/dateSlice';
-import * as util from '../../util';
-import styles from './DayView.module.scss';
+import React, { JSX } from 'react';
+import { useNonNullContext } from '@/store/calendarContext';
 
 type HourProps = {
   hour: number,
 };
 
 const Hour = ({ hour }: HourProps): JSX.Element => {
-  const selectedDate = new Date(useSelector((state: RootState) => state.date.selectedDate));
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useNonNullContext('dispatch');
+  const calendar = useNonNullContext('state');
+  const selectedDate = new Date(calendar.selectedDate);
+  
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const newHour = parseInt(event.currentTarget.innerHTML, 10);
     selectedDate.setHours(newHour);
-    dispatch(selectNewDate(selectedDate.toString()));
+    dispatch({type: 'selectNewDate', payload: selectedDate.toString() })
   };
 
   return (
     <button
       type="button"
-      className={[
-        styles.hour,
-        (hour === selectedDate.getHours()) ? styles.selected : null,
-      ].join(' ')}
       onClick={handleClick}
+      style={{
+        background: 'linear-gradient(lightgray, lightgray) bottom / 90% 2px no-repeat'
+      }}
+      className={`rounded-[10px] pt-2 text-lg border-none ${hour === selectedDate.getHours() ? '!bg-[#b0c4de]' : 'hover:!bg-[#e3e3e3]'}`}
     >
       {hour}
     </button>
@@ -39,7 +37,7 @@ const DayView = (): JSX.Element => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className='grid grid-cols-24'>
       {schedule}
     </div>
   );

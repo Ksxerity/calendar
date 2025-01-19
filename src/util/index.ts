@@ -7,14 +7,15 @@ import {
   isValidYear,
   isValidHour,
   isValidDay,
+  hourTostring
 } from './util';
 
 import {
-  currentWeekEventSelector,
-  dayEventSelector,
-  eventIdSelector,
+  getCurrentWeekEvents,
+  getEventByDate,
+  getEventById,
   eventSorting,
-} from './selectors';
+} from './eventUtils';
 
 export type {
   DayType,
@@ -28,8 +29,9 @@ export {
   isValidYear,
   isValidHour,
   isValidDay,
-  currentWeekEventSelector,
-  dayEventSelector,
-  eventIdSelector,
+  hourTostring,
+  getCurrentWeekEvents,
+  getEventByDate,
+  getEventById,
   eventSorting,
 };

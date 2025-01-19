@@ -1,146 +1,28 @@
 {
-  "name": "calendar",
+  "name": "temp",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.6.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "bootstrap": "^4.6.0",
-    "node-sass": "^6.0.0",
-    "react": "^17.0.2",
-    "react-bootstrap": "^1.6.1",
-    "react-dom": "^17.0.2",
-    "react-redux": "^7.2.4",
-    "react-scripts": "4.0.3",
-    "reselect": "^4.0.0",
-    "typescript": "^4.4.4",
-    "web-vitals": "^1.1.2"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "eslintConfig": {
-    "plugins": [
-      "react",
-      "@typescript-eslint"
-    ],
-    "extends": [
-      "airbnb-typescript",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react/recommended"
-    ],
-    "parserOptions": {
-      "project": "./tsconfig.json",
-      "ecmaFeatures": {
-        "jsx": true
-      }
-    },
-    "rules": {
-      "@typescript-eslint/ban-types": [
-        0
-      ],
-      "react/jsx-uses-react": "error",
-      "react/jsx-uses-vars": "error",
-      "react/jsx-boolean-value": [
-        2,
-        "always"
-      ],
-      "no-plusplus": [
-        2,
-        {
-          "allowForLoopAfterthoughts": true
-        }
-      ],
-      "import/prefer-default-export": 0,
-      "arrow-body-style": [
-        0,
-        "as-needed",
-        {
-          "requireReturnForObjectLiteral": false
-        }
-      ],
-      "no-param-reassign": [
-        "error",
-        {
-          "props": false
-        }
-      ],
-      "jsx-a11y/click-events-have-key-events": [
-        0
-      ],
-      "jsx-a11y/label-has-associated-control": [
-        "error",
-        {
-          "required": {
-            "some": [
-              "nesting",
-              "id"
-            ]
-          }
-        }
-      ],
-      "max-len": [
-        "error",
-        {
-          "code": 130
-        }
-      ]
-    },
-    "env": {
-      "browser": true,
-      "node": true
-    },
-    "settings": {
-      "react": {
-        "createClass": "createReactClass",
-        "pragma": "React",
-        "fragment": "Fragment",
-        "version": "detect",
-        "flowVersion": "0.53"
-      },
-      "propWrapperFunctions": [
-        "forbidExtraProps",
-        {
-          "property": "freeze",
-          "object": "Object"
-        },
-        {
-          "property": "myFavoriteWrapper"
-        }
-      ],
-      "linkComponents": [
-        "Hyperlink",
-        {
-          "name": "Link",
-          "linkAttribute": "to"
-        }
-      ]
-    }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@material-tailwind/react": "^2.1.10",
+    "next": "15.1.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/node": "^15.12.5",
-    "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.8",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "eslint": "^7.29.0",
-    "eslint-config-airbnb-typescript": "^12.3.1",
-    "eslint-plugin-react": "^7.24.0"
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^18.2.19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
 }
