@@ -98,7 +98,7 @@ const Actions = (): JSX.Element => {
   };
 
   return (
-    <div className='flex justify-between items-center m-1.5'>
+    <div className='flex justify-between items-center m-1.5 w-full'>
       <CreateEventModal show={showEventModal} handleClose={() => setShowEventModal(false)} />
       <Typography className='text-[#34495e] md:text-xl lg:text-2xl xl:text-3xl'>
         {populateCurrentDateLabel()}

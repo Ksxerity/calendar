@@ -3,6 +3,7 @@ import { CreateEventModal, DisplayAllEventsModal, DisplayEventModal } from '../M
 import * as util from '../../util';
 import { useNonNullContext } from '@/store/calendarContext';
 import { IDateEvent } from '@/store/dateTypes';
+import { Button, Typography } from '@material-tailwind/react';
 
 type WeekProps = {
   dates: Array<util.DayType>,
@@ -22,7 +23,7 @@ const Week = (props: WeekProps): JSX.Element => {
     showAllEvents,
   } = props;
 
-  const handleGridClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+  const handleGridClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const date: string = (event.currentTarget.getAttribute('data-date') || '');
     if (!date) {
       const eventId: string = (event.currentTarget.getAttribute('data-event-id') || '');
@@ -60,41 +61,42 @@ const Week = (props: WeekProps): JSX.Element => {
   }
   for (let i = 0; i < dates.length; i++) {
     grid.push(
-      <div
+      <Button
+        variant='text'
+        ripple={false}
         key={`grid-${dates[i].date}-${i}`}
-        role="button"
         style={{
           gridColumnStart: i + 1,
           background: getLinearGradient(i)
         }}
-        className={`row-start-1 row-end-7 rounded-[10px] border-none overflow-hidden ${(dates[i].date.getDate() === selectedDate.getDate() && dates[i].color === 'black') ? '!bg-[lightsteelblue]' : 'hover:!bg-[#e3e3e3]'}`}
-        aria-hidden="true"
+        className={`row-start-1 row-end-9 rounded-[10px] border-none overflow-hidden ${(dates[i].date.getDate() === selectedDate.getDate() && dates[i].color === 'black') ? '!bg-[lightsteelblue]' : 'hover:!bg-[#e3e3e3]'}`}
         data-color={dates[i].color}
         data-date={dates[i].date}
         onClick={handleGridClick}
-      />,
+      > </Button>,
     );
     datesRow.push(
-      <div
+      <Button
+        variant="text"
+        size="sm"
+        ripple={false}
         key={`datesrow-${dates[i].date}-${i}`}
-        role="button"
-        aria-hidden="true"
         data-color={dates[i].color}
         data-date={dates[i].date}
         style={{
           color: dates[i].color,
           gridColumnStart: i + 1,
         }}
-        className='row-start-1 pl-[10px] text-[1.25vw] leading-[20px]'
+        className='row-start-1 pl-[10px] text-[1.25vw] text-left hover:bg-transparent active:bg-transparent'
         onClick={handleGridClick}
       >
         {(new Date(dates[i].date)).getDate()}
-      </div>,
+      </Button>,
     );
   }
 
   const eventsRow: Array<JSX.Element> = [];
-  const eventsPos: Array<Array<number | null>> = new Array(5).fill(null).map(() => new Array(7).fill(null));
+  const eventsPos: Array<Array<number | null>> = new Array(7).fill(null).map(() => new Array(7).fill(null));
   const events: Array<IDateEvent> = util.getCurrentWeekEvents(dates, selectedDate);
   events.sort(util.eventSorting);
   const firstDayOfWeek: Date = new Date(dates[0].date);
@@ -114,24 +116,26 @@ const Week = (props: WeekProps): JSX.Element => {
         break;
       }
     }
-    if (index === 4) {
+    if (index === 6) {
       // Too many events in one day. Add a '...' to the bottom row
       eventsPos[index].splice(startPos, (endPos - startPos) + 1, ...new Array((endPos - startPos) + 1).fill(event.id));
       eventsRow.push(
-        <div
+        <Button
+          size="sm"
+          ripple={false}
           key={`eventsrow-${events[i].id}-${dates[0].date}`}
-          role="button"
           style={{
             gridColumn: `${startPos + 1} / ${endPos + 2}`,
             gridRow: index + 2,
           }}
-          className='inline-block items-center m-l-px pl-[5px] rounded-[3px] pr-[3px] overflow-hidden whitespace-nowrap text-ellipsis leading-[16px] text-[.9vw] bg-[lightgray]'
-          aria-hidden="true"
+          className='ml-px p-0 rounded-[3px] bg-[lightgray] hover:shadow-none shadow-none'
           data-event-date={events[i].from}
           onClick={handleGridClick}
         >
-          ...
-        </div>,
+          <Typography variant="h6" className='text-left text-black leading-[.5rem] ml-[6px]'>
+            ...
+          </Typography>
+        </Button>,
       );
     } else if (index !== -1) {
       // There is enough space in the row to put another event
@@ -142,26 +146,26 @@ const Week = (props: WeekProps): JSX.Element => {
         eventName = `${date.getHours()}:${date.getMinutes()}${date.getMinutes() === 0 ? 0 : ''} - ${events[i].name}`;
       }
       eventsRow.push(
-        <div
+        <Button
+          size="sm"
+          ripple={false}
           key={`eventsrow-${events[i].id}-${dates[0].date}`}
-          role="button"
           style={{
             gridColumn: `${startPos + 1} / ${endPos + 2}`,
             gridRow: index + 2,
           }}
-          className={`inline-block items-center m-l-px pl-[5px] rounded-[3px] pr-[3px] overflow-hidden whitespace-nowrap text-ellipsis leading-[16px] text-[.9vw] bg-custom-${events[i].color}`}
-          aria-hidden="true"
+          className={`ml-px pl-[5px] rounded-[3px] pr-[3px] overflow-hidden whitespace-nowrap text-ellipsis text-black text-left normal-case leading-[.5rem] bg-custom-${events[i].color} hover:bg-custom-${events[i].color} hover:shadow-none shadow-none`}
           data-event-id={events[i].id}
           onClick={handleGridClick}
         >
           {eventName}
-        </div>,
+        </Button>,
       );
     }
   }
 
   return (
-    <div className='grid grid-cols-7 grid-rows-[23%_repeat(5,_minmax(0,_1fr))] gap-y-px'>
+    <div className='grid grid-cols-7 grid-rows-[15%_repeat(7,_minmax(0,_1fr))] gap-y-px'>
       {grid}
       {datesRow}
       {eventsRow}
@@ -189,7 +193,7 @@ const MonthView = (): JSX.Element => {
 
   const week: Array<JSX.Element> = [];
   week.push(
-    <div key="days_of_week-row" className='flex flow-row text-center'>
+    <div key="days_of_week-row" className='flex flow-row text-center items-center'>
       <div className='grow'>Sunday</div>
       <div className='grow'>Monday</div>
       <div className='grow'>Tuesday</div>

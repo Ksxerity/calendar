@@ -2,14 +2,6 @@ import { getNumberOfDaysInMonth, hourTostring } from '@/util';
 import { Input, Option, Select } from '@material-tailwind/react';
 import React, { JSX, useMemo, useState } from 'react';
 
-type DurationErrors = {
-  minute: boolean,
-  hour: boolean,
-  day: boolean,
-  month: boolean,
-  year: boolean,
-};
-
 type DurationValues = {
   minute: string,
   hour: string,
@@ -19,17 +11,17 @@ type DurationValues = {
 };
 
 type DurationSectionProps = {
-  type: string,
+  label: string,
   values: DurationValues,
-  errors: DurationErrors,
+  error?: boolean,
   setValue: ((value: DurationValues) => void),
 };
 
 const DurationSection = (props: DurationSectionProps): JSX.Element => {
   const {
-    type,
+    label,
     values,
-    errors,
+    error,
     setValue,
   } = props;
   const [selectedTime, setSelectedTime] = useState(`${hourTostring(values.hour)}:00`);
@@ -73,8 +65,8 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
 
   return (
     <div className='flex flex-col'>
-      <div>
-        {type}
+      <div className={`pb-3 ${error ? 'text-red-500' : ''}`}>
+        {`${label}${error ? ' (Date occurs before the "From" date above)' : ''}`}
       </div>
       <div className='flex gap-x-[5px]'>
         <div className='w-28'>

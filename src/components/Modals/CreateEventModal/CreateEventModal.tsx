@@ -38,14 +38,6 @@ const defaultDateValue = (type: 'from' | 'to', selectedDate: Date, eventDate: st
   };
 };
 
-const defaultErrorState = {
-  minute: false,
-  hour: false,
-  day: false,
-  month: false,
-  year: false,
-};
-
 const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEventModalProps): JSX.Element => {
   const dispatch = useNonNullContext('dispatch');
   const calendar = useNonNullContext('state');
@@ -61,13 +53,11 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
   // const [repeatingValue, setRepeatingValue] = useState(false);
   // Initialize Error State
   const [nameError, setNameError] = useState(false);
-  const [fromDurationError, setFromDurationError] = useState(defaultErrorState);
-  const [toDurationError, setToDurationError] = useState(defaultErrorState);
+  const [toDurationError, setToDurationError] = useState(false);
 
   const resetErrors = (): void => {
     setNameError(false);
-    setToDurationError(defaultErrorState);
-    setFromDurationError(defaultErrorState);
+    setToDurationError(false);
   };
 
   const resetForm = (): void => {
@@ -85,29 +75,24 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
   }, [show, eventToEdit]);
 
   const handleSubmit = (): void => {
-    let validForm = true;
     // Reset error flags
     resetErrors();
-    // Change input values into floats to make it easier to validate
-    // Reason why I chose floats was to perform correct validation
-    // on decmial values. ParseInt would change a '19.2' into 19
-    // which will be accepted, but not accurate
     const dateEvent = {
       id: -1,
       name: nameValue,
       from: {
-        minute: parseFloat(fromDurationValue.minute),
-        hour: parseFloat(fromDurationValue.hour),
-        day: parseFloat(fromDurationValue.day),
-        month: parseFloat(fromDurationValue.month),
-        year: parseFloat(fromDurationValue.year),
+        minute: parseInt(fromDurationValue.minute),
+        hour: parseInt(fromDurationValue.hour),
+        day: parseInt(fromDurationValue.day),
+        month: parseInt(fromDurationValue.month),
+        year: parseInt(fromDurationValue.year),
       },
       to: {
-        minute: parseFloat(toDurationValue.minute),
-        hour: parseFloat(toDurationValue.hour),
-        day: parseFloat(toDurationValue.day),
-        month: parseFloat(toDurationValue.month),
-        year: parseFloat(toDurationValue.year),
+        minute: parseInt(toDurationValue.minute),
+        hour: parseInt(toDurationValue.hour),
+        day: parseInt(toDurationValue.day),
+        month: parseInt(toDurationValue.month),
+        year: parseInt(toDurationValue.year),
       },
       color: colorValue,
       description: descriptionValue,
@@ -115,58 +100,10 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
 
     // Validate name
     if (!dateEvent.name) {
-      validForm = false;
       setNameError(true);
-    }
-
-    // Check for any empty date fields or wrong formats (decimals/negatives)
-    let emptyDateField = false;
-    if (!util.isValidYear(dateEvent.to.year)) {
-      emptyDateField = true;
-      setToDurationError({
-        ...toDurationError,
-        year: true,
-      });
-    }
-    if (!util.isValidDay(dateEvent.to.day, dateEvent.to.month, dateEvent.to.year)) {
-      emptyDateField = true;
-      setToDurationError({
-        ...toDurationError,
-        day: true,
-      });
-    }
-    if (!util.isValidHour(dateEvent.to.hour)) {
-      emptyDateField = true;
-      setToDurationError({
-        ...toDurationError,
-        hour: true,
-      });
-    }
-    if (!util.isValidYear(dateEvent.from.year)) {
-      emptyDateField = true;
-      setFromDurationError({
-        ...fromDurationError,
-        year: true,
-      });
-    }
-    if (!util.isValidDay(dateEvent.from.day, dateEvent.from.month, dateEvent.from.year)) {
-      emptyDateField = true;
-      setFromDurationError({
-        ...fromDurationError,
-        day: true,
-      });
-    }
-    if (!util.isValidHour(dateEvent.from.hour)) {
-      emptyDateField = true;
-      setFromDurationError({
-        ...fromDurationError,
-        hour: true,
-      });
-    }
-
-    // If no empty date fields, validate that 'from' and 'to' dates are
-    // not the same and that 'to' is not behind 'from'
-    if (validForm && !emptyDateField) {
+    } else {
+      // Validate that 'from' and 'to' dates are
+      // not the same and that 'to' is not behind 'from'
       const start = new Date(
         dateEvent.from.year,
         dateEvent.from.month,
@@ -182,25 +119,11 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
         dateEvent.to.minute,
       );
       if (start.getTime() === end.getTime()) {
-        validForm = false;
-        setToDurationError({
-          minute: true,
-          hour: true,
-          day: true,
-          month: true,
-          year: true,
-        });
+        setToDurationError(true);
       } else if (end.getTime() < start.getTime()) {
-        validForm = false;
-        setToDurationError({
-          minute: true,
-          hour: true,
-          day: true,
-          month: true,
-          year: true,
-        });
+        setToDurationError(true);
       }
-      if (validForm) {
+      if (toDurationError) {
         const finalEvent = {
           ...dateEvent,
           from: start.toString(),
@@ -210,7 +133,7 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
           dispatch({ type: 'addDateEvent', payload: finalEvent});
         } else {
           finalEvent.id = eventIdToEdit;
-          dispatch({ type: 'addDateEvent', payload: finalEvent});
+          dispatch({ type: 'editDateEvent', payload: finalEvent});
         }
         handleClose();
       }
@@ -229,19 +152,19 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
               placeholder="Name"
               onChange={(event) => setNameValue(event.currentTarget.value)}
               value={nameValue}
+              error={nameError}
             />
           </div>
           <div className='flex flex-col mb-4 gap-2'>
             <DurationSection
-              type="From"
+              label="From"
               values={fromDurationValue}
-              errors={fromDurationError}
               setValue={setFromDurationValue}
             />
             <DurationSection
-              type="To"
+              label="To"
               values={toDurationValue}
-              errors={toDurationError}
+              error={toDurationError}
               setValue={setToDurationValue}
             />
           </div>

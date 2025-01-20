@@ -5,7 +5,7 @@ import {
   RightArrowIcon,
 } from '../../assets';
 import { useNonNullContext } from '@/store/calendarContext';
-import { Dialog, DialogHeader, DialogBody, Button } from '@material-tailwind/react';
+import { Dialog, DialogHeader, DialogBody, Button, Input } from '@material-tailwind/react';
 import Image from 'next/image';
 
 type SelectionModalProps = {
@@ -39,27 +39,26 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const monthElements: JSX.Element[] = [];
     for (let i = 0; i < months.length; i += 1) {
-      monthElements.push(<Button key={`${months[i]}`} id={`${i}`} className='m-[2px] bg-transparent border-1 border-solid border-[lightgray] rounded-[5px] text-lg text-[#34495e] hover:bg-[#e3e3e3]' onClick={handleSubmit}>{months[i]}</Button>)
+      monthElements.push(<Button key={`${months[i]}`} id={`${i}`} className='m-[2px] bg-transparent border-2 border-solid border-[lightgray] rounded-[5px] text-lg text-[#34495e] hover:bg-[#e3e3e3] normal-case' onClick={handleSubmit}>{months[i]}</Button>)
     }
     return monthElements;
   }
 
   return (
-    <Dialog open={show} handler={handleClose}>
-      <DialogHeader>
+    <Dialog open={show} handler={handleClose} size='sm'>
+      <DialogHeader className='w-full'>
         <form noValidate={true} onSubmit={(e) => e.preventDefault()} autoComplete="off">
-          <input
+          <Input
             type="number"
-            id="yearInput"
-            name="year"
-            placeholder="Year"
+            inputMode="numeric"
+            label={`${yearError ? 'Year (Invalid Year (Do not precede 1970)' : 'Year'}`}
+            error={yearError}
             onChange={(event) => setYearValue(event.currentTarget.value)}
             value={yearValue}
           />
-          <label className={`${yearError ? 'after:content-[" (Invalid Year (Do not precede 1970))"]' : ''}`} htmlFor="yearInput">Year</label>
         </form>
       </DialogHeader>
-      <DialogBody>
+      <DialogBody className='grid grid-cols-3'>
         {generateMonthElements()}
       </DialogBody>
     </Dialog>
@@ -115,12 +114,12 @@ const Selector = (): JSX.Element => {
   };
 
   return (
-    <div style={{ borderStyle: 'groove' }} className='w-[85%] border-t-2 border-[#BDC3C7] flex justify-between m-0 m-auto'>
+    <div style={{ borderStyle: 'groove' }} className='w-[85%] border-t-2 border-[#BDC3C7] flex justify-between'>
       <SelectionModal show={show} handleClose={() => setShow(false)} />
       <Button variant="text" id="prev" onClick={handleArrowClick} className='hover:bg-[#e3e3e3]'>
         <Image src={LeftArrowIcon} alt="Left arrow button" className='max-h-[11vh]' />
       </Button>
-      <Button variant="text" onClick={() => setShow(true)} className='md:text-xl lg:text-2xl xl:text-3xl text-[#34495e] hover:bg-[#e3e3e3]'>
+      <Button variant="text" onClick={() => setShow(true)} className='md:text-xl lg:text-2xl xl:text-3xl text-[#34495e] hover:bg-[#e3e3e3] normal-case'>
         {populateMonthLabel()}
       </Button>
       <Button variant="text" id="next" onClick={handleArrowClick} className='hover:bg-[#e3e3e3]'>

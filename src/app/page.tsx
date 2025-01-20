@@ -48,10 +48,10 @@ export default function Home() {
       <CalendarContext.Provider value={calendar}>
         <CalendarDispatchContext.Provider value={dispatch}>
           <div className='flex justify-center h-screen'>
-            <div className="flex flex-col w-[85%]">
+            <div className="flex flex-col items-center w-[85%]">
               <Actions />
               <Selector />
-              <div className='border-2 border-groove border-[#BDC3C7] grow mb-[100px]'>
+              <div className='border-2 border-groove border-[#BDC3C7] h-4/5'>
                 {calendarType}
               </div>
             </div>
