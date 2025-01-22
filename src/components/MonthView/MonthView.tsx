@@ -60,6 +60,7 @@ const Week = (props: WeekProps): JSX.Element => {
     return 'none';
   }
   for (let i = 0; i < dates.length; i++) {
+    // Handles the onClick event for selecting a new date and manages the grid border styles
     grid.push(
       <Button
         variant='text'
@@ -75,6 +76,7 @@ const Week = (props: WeekProps): JSX.Element => {
         onClick={handleGridClick}
       > </Button>,
     );
+    // Occupies the first row of each date box grid. Displays the day of the month
     datesRow.push(
       <Button
         variant="text"

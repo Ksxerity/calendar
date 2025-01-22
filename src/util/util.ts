@@ -135,11 +135,6 @@ export const getCurrentDate = (): Date => {
   return new Date();
 };
 
-type MonthYearObject = {
-  month: number,
-  year: number
-};
-
 export const isValidYear = (year: number): boolean => {
   if (Number.isNaN(year)) return false;
   if (year.toString().includes('.')) return false;
