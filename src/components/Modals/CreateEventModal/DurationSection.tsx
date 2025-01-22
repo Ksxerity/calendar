@@ -66,7 +66,7 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
   return (
     <div className='flex flex-col'>
       <div className={`pb-3 ${error ? 'text-red-500' : ''}`}>
-        {`${label}${error ? ' (Date occurs before the "From" date above)' : ''}`}
+        {`${label}${error ? ' (Please pick a date or time after the "From" date above)' : ''}`}
       </div>
       <div className='flex gap-x-1'>
         <div className='w-28'>

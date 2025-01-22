@@ -56,6 +56,7 @@ const DisplayAllEventsModal = (props: DisplayAllEventsModalProps): JSX.Element =
     }
     eventArray.push(
       <div
+        key={events[i].id}
         role="button"
         aria-hidden="true"
         onClick={handleClick}

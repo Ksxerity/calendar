@@ -118,12 +118,9 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
         dateEvent.to.hour,
         dateEvent.to.minute,
       );
-      if (start.getTime() === end.getTime()) {
+      if (end.getTime() <= start.getTime()) {
         setToDurationError(true);
-      } else if (end.getTime() < start.getTime()) {
-        setToDurationError(true);
-      }
-      if (toDurationError) {
+      } else {
         const finalEvent = {
           ...dateEvent,
           from: start.toString(),
@@ -142,7 +139,7 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
 
   return (
     <Dialog open={show} handler={handleClose} size={'xs'}>
-      <DialogHeader>Create New Event</DialogHeader>
+      <DialogHeader>{`${ eventIdToEdit > -1 ? 'Edit Event' : 'Create New Event'}`}</DialogHeader>
       <DialogBody className='pt-0'>
         <form noValidate={true} onSubmit={(e) => e.preventDefault()} autoComplete="off">
           <div className='mb-4'>
@@ -183,15 +180,6 @@ const CreateEventModal = ({ show, handleClose, eventIdToEdit = -1 }: CreateEvent
               value={descriptionValue}
             />
           </div>
-          {/* <div className={styles['form-repeating']}>
-            <input
-              type="checkbox"
-              id="repeating"
-              name="repeating"
-              onChange={(event) => setRepeatingValue(event.target.checked)}
-            />
-            <label htmlFor="repeating">Repeating Event</label>
-          </div> */}
           <div className='flex justify-between'>
             <Button variant="outlined" onClick={handleClose}>
               Cancel

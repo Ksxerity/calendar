@@ -24,7 +24,7 @@ const theme = {
         }
       }
     }
-  },
+  }
 }
 
 export default function Home() {

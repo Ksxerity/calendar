@@ -39,6 +39,9 @@ export default withMT({
         'custom-yellow': 'var(--yellow-background)',
         'custom-purple': 'var(--purple-background)',
       },
+      fontFamily: {
+        sans: ['Montserrat', 'sans-serif']
+      }
     },
   },
   plugins: [],

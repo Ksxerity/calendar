@@ -75,7 +75,7 @@ const ValidEventModal = (props: ValidEventModalProps): JSX.Element => {
   };
   return (
     <Dialog open={show} handler={handleClose} className='flex flex-col' size='xs'>
-      <DialogHeader className={`text-${currentEvent.color} m-0 m-auto pb-0`}>{currentEvent.name}</DialogHeader>
+      <DialogHeader className={`text-custom-${currentEvent.color} m-0 m-auto pb-0`}>{currentEvent.name}</DialogHeader>
       <DialogBody className='flex flex-col items-center'>
         <div className='pb-2'>
           {currentEvent.description}

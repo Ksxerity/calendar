@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as util from '../../util';
 import {
   LeftArrowIcon,
@@ -19,6 +19,10 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
   const selectedDate = new Date(calendar.selectedDate);
   const [yearError, setYearError] = useState(false);
   const [yearValue, setYearValue] = useState(`${selectedDate.getFullYear()}`);
+
+  useEffect(() => {
+    setYearValue(`${selectedDate.getFullYear()}`)
+  }, [show])
 
   const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const yearVal = parseInt(yearValue, 10);
@@ -45,13 +49,14 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
   }
 
   return (
-    <Dialog open={show} handler={handleClose} size='sm'>
-      <DialogHeader className='w-full'>
-        <form noValidate={true} onSubmit={(e) => e.preventDefault()} autoComplete="off">
+    <Dialog open={show} handler={handleClose} size='xs'>
+      <DialogHeader className='flex justify-center w-full pb-0 mt-2'>
+        <form className='w-3/5' noValidate={true} onSubmit={(e) => e.preventDefault()} autoComplete="off">
           <Input
             type="number"
+            variant="static"
             inputMode="numeric"
-            label={`${yearError ? 'Year (Invalid Year (Do not precede 1970)' : 'Year'}`}
+            label={`${yearError ? 'Year (Invalid - Do not precede 1970)' : 'Year'}`}
             error={yearError}
             onChange={(event) => setYearValue(event.currentTarget.value)}
             value={yearValue}
@@ -119,7 +124,7 @@ const Selector = (): JSX.Element => {
       <Button variant="text" id="prev" onClick={handleArrowClick} className='hover:bg-[#e3e3e3]'>
         <Image src={LeftArrowIcon} alt="Left arrow button" className='max-h-[11vh]' />
       </Button>
-      <Button variant="text" onClick={() => setShow(true)} className='text-xl md:text-2xl lg:text-3xl text-[#34495e] hover:bg-[#e3e3e3] normal-case'>
+      <Button variant="text" onClick={() => setShow(true)} className='text-3xl md:text-4xl lg:text-5xl text-[#34495e] hover:bg-[#e3e3e3] normal-case'>
         {populateMonthLabel()}
       </Button>
       <Button variant="text" id="next" onClick={handleArrowClick} className='hover:bg-[#e3e3e3]'>
