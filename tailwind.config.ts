@@ -23,6 +23,10 @@ export default withMT({
     'text-custom-purple',
   ],
   theme: {
+    screens: {
+      md: '1920px',
+      lg: '2560px',
+    },
     extend: {
       colors: {
         background: "var(--background)",

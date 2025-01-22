@@ -33,7 +33,7 @@ const Day = ({ index, date, selectedDate }: WeekProps): JSX.Element => {
     <button
       type="button"
       style={{ color: `${date.color}`, background: index !== 0 ? 'linear-gradient(lightgray, lightgray) left / 2px 85% no-repeat' : '' }}
-      className={`rounded-[10px] pd-[10px] pt-[5px] text-[1.5vw] border-none flex-col ${date.date.getDate() === selectedDate.getDate() && date.color === 'black' ? '!bg-[#b0c4de]' : 'hover:!bg-[#e3e3e3]'}`}
+      className={`rounded-2 pd-2 pt-1 text-lg md:text-xl lg:text-2xl border-none flex-col ${date.date.getDate() === selectedDate.getDate() && date.color === 'black' ? '!bg-[#b0c4de]' : 'hover:!bg-[#e3e3e3]'}`}
       onClick={handleClick}
     >
       {date.date.getDate()}
@@ -47,13 +47,13 @@ const WeekView = (): JSX.Element => {
   const daysInWeek: Array<util.DayType> = util.getWeekArray(selectedDate);
 
   const week: Array<JSX.Element> = [];
-  week.push(<div className='text-center' key="sunday">Sunday</div>);
-  week.push(<div className='text-center' key="monday">Monday</div>);
-  week.push(<div className='text-center' key="tuesday">Tuesday</div>);
-  week.push(<div className='text-center' key="wednesday">Wednesday</div>);
-  week.push(<div className='text-center' key="thursday">Thursday</div>);
-  week.push(<div className='text-center' key="friday">Friday</div>);
-  week.push(<div className='text-center' key="saturday">Saturday</div>);
+  week.push(<div className='text-center text-base md:text-lg lg:text-xl' key="sunday">Sunday</div>);
+  week.push(<div className='text-center text-base md:text-lg lg:text-xl' key="monday">Monday</div>);
+  week.push(<div className='text-center text-base md:text-lg lg:text-xl' key="tuesday">Tuesday</div>);
+  week.push(<div className='text-center text-base md:text-lg lg:text-xl' key="wednesday">Wednesday</div>);
+  week.push(<div className='text-center text-base md:text-lg lg:text-xl' key="thursday">Thursday</div>);
+  week.push(<div className='text-center text-base md:text-lg lg:text-xl' key="friday">Friday</div>);
+  week.push(<div className='text-center text-base md:text-lg lg:text-xl' key="saturday">Saturday</div>);
   for (let i = 0; i < daysInWeek.length; i++) {
     week.push(<Day key={`week${i}`} index={i} date={daysInWeek[i]} selectedDate={selectedDate} />);
   }

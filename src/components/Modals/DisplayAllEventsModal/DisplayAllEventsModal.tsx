@@ -60,7 +60,7 @@ const DisplayAllEventsModal = (props: DisplayAllEventsModalProps): JSX.Element =
         aria-hidden="true"
         onClick={handleClick}
         data-event-id={events[i].id}
-        className={`bg-custom-${events[i].color} rounded-[5px] pl-[5px] text-black`}
+        className={`bg-custom-${events[i].color} rounded pl-1 text-black`}
       >
         {eventName}
       </div>,
@@ -68,7 +68,7 @@ const DisplayAllEventsModal = (props: DisplayAllEventsModalProps): JSX.Element =
   }
 
   return (
-    <Dialog open={show} handler={handleClose}>
+    <Dialog open={show} handler={handleClose} size='xs'>
       <DialogHeader>
         {`All events on ${populateEventDateLabel(selectedDate)}`}
       </DialogHeader>

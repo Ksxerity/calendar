@@ -21,9 +21,9 @@ const Hour = ({ hour }: HourProps): JSX.Element => {
       type="button"
       onClick={handleClick}
       style={{
-        background: 'linear-gradient(lightgray, lightgray) bottom / 90% 2px no-repeat'
+        background: `${hour === 24 ? '' : 'linear-gradient(lightgray, lightgray) bottom / 90% 2px no-repeat'}`
       }}
-      className={`rounded-[10px] pt-2 text-lg border-none ${hour === selectedDate.getHours() ? '!bg-[#b0c4de]' : 'hover:!bg-[#e3e3e3]'}`}
+      className={`rounded-[10px] pt-2 text-base md:text-lg lg:text-xl border-none ${hour === selectedDate.getHours() ? '!bg-[#b0c4de]' : 'hover:!bg-[#e3e3e3]'}`}
     >
       {hour}
     </button>
@@ -37,7 +37,7 @@ const DayView = (): JSX.Element => {
   }
 
   return (
-    <div className='grid grid-cols-24'>
+    <div className='grid grid-cols-24 h-full'>
       {schedule}
     </div>
   );

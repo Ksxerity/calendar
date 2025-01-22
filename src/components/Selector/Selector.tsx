@@ -39,7 +39,7 @@ const SelectionModal = ({ show, handleClose }: SelectionModalProps): JSX.Element
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const monthElements: JSX.Element[] = [];
     for (let i = 0; i < months.length; i += 1) {
-      monthElements.push(<Button key={`${months[i]}`} id={`${i}`} className='m-[2px] bg-transparent border-2 border-solid border-[lightgray] rounded-[5px] text-lg text-[#34495e] hover:bg-[#e3e3e3] normal-case' onClick={handleSubmit}>{months[i]}</Button>)
+      monthElements.push(<Button key={`${months[i]}`} id={`${i}`} className='m-0.5 bg-transparent border-2 border-solid border-[lightgray] rounded text-sm md:text-base lg:text-lg text-[#34495e] hover:bg-[#e3e3e3] normal-case' onClick={handleSubmit}>{months[i]}</Button>)
     }
     return monthElements;
   }
@@ -114,12 +114,12 @@ const Selector = (): JSX.Element => {
   };
 
   return (
-    <div style={{ borderStyle: 'groove' }} className='w-[85%] border-t-2 border-[#BDC3C7] flex justify-between'>
+    <div className='flex justify-between'>
       <SelectionModal show={show} handleClose={() => setShow(false)} />
       <Button variant="text" id="prev" onClick={handleArrowClick} className='hover:bg-[#e3e3e3]'>
         <Image src={LeftArrowIcon} alt="Left arrow button" className='max-h-[11vh]' />
       </Button>
-      <Button variant="text" onClick={() => setShow(true)} className='md:text-xl lg:text-2xl xl:text-3xl text-[#34495e] hover:bg-[#e3e3e3] normal-case'>
+      <Button variant="text" onClick={() => setShow(true)} className='text-xl md:text-2xl lg:text-3xl text-[#34495e] hover:bg-[#e3e3e3] normal-case'>
         {populateMonthLabel()}
       </Button>
       <Button variant="text" id="next" onClick={handleArrowClick} className='hover:bg-[#e3e3e3]'>

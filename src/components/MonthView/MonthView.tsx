@@ -69,7 +69,7 @@ const Week = (props: WeekProps): JSX.Element => {
           gridColumnStart: i + 1,
           background: getLinearGradient(i)
         }}
-        className={`row-start-1 row-end-9 rounded-[10px] border-none overflow-hidden ${(dates[i].date.getDate() === selectedDate.getDate() && dates[i].color === 'black') ? '!bg-[lightsteelblue]' : 'hover:!bg-[#e3e3e3]'}`}
+        className={`row-start-1 row-end-9 rounded-lg border-none overflow-hidden ${(dates[i].date.getDate() === selectedDate.getDate() && dates[i].color === 'black') ? '!bg-[lightsteelblue]' : 'hover:!bg-[#e3e3e3]'}`}
         data-color={dates[i].color}
         data-date={dates[i].date}
         onClick={handleGridClick}
@@ -87,7 +87,7 @@ const Week = (props: WeekProps): JSX.Element => {
           color: dates[i].color,
           gridColumnStart: i + 1,
         }}
-        className='row-start-1 pl-[10px] text-[1.25vw] text-left hover:bg-transparent active:bg-transparent'
+        className='row-start-1 pl-2 text-sm md:text-base lg:text-lg text-left !leading-none hover:bg-transparent active:bg-transparent'
         onClick={handleGridClick}
       >
         {(new Date(dates[i].date)).getDate()}
@@ -128,11 +128,11 @@ const Week = (props: WeekProps): JSX.Element => {
             gridColumn: `${startPos + 1} / ${endPos + 2}`,
             gridRow: index + 2,
           }}
-          className='ml-px p-0 rounded-[3px] bg-[lightgray] hover:shadow-none shadow-none'
+          className='ml-px p-0 rounded bg-[lightgray] hover:shadow-none shadow-none'
           data-event-date={events[i].from}
           onClick={handleGridClick}
         >
-          <Typography variant="h6" className='text-left text-black leading-[.5rem] ml-[6px]'>
+          <Typography variant="h6" className='text-left text-black leading-[.5rem] ml-1'>
             ...
           </Typography>
         </Button>,
@@ -154,7 +154,7 @@ const Week = (props: WeekProps): JSX.Element => {
             gridColumn: `${startPos + 1} / ${endPos + 2}`,
             gridRow: index + 2,
           }}
-          className={`ml-px pl-[5px] rounded-[3px] pr-[3px] overflow-hidden whitespace-nowrap text-ellipsis text-black text-left normal-case leading-[.5rem] bg-custom-${events[i].color} hover:bg-custom-${events[i].color} hover:shadow-none shadow-none`}
+          className={`ml-px pl-1 rounded pr-1 overflow-hidden whitespace-nowrap text-ellipsis text-black text-left normal-case text-xs md:text-sm lg:text-base !leading-[0px] font-light bg-custom-${events[i].color} hover:bg-custom-${events[i].color} hover:shadow-none shadow-none`}
           data-event-id={events[i].id}
           onClick={handleGridClick}
         >
@@ -194,13 +194,13 @@ const MonthView = (): JSX.Element => {
   const week: Array<JSX.Element> = [];
   week.push(
     <div key="days_of_week-row" className='flex flow-row text-center items-center'>
-      <div className='grow'>Sunday</div>
-      <div className='grow'>Monday</div>
-      <div className='grow'>Tuesday</div>
-      <div className='grow'>Wednesday</div>
-      <div className='grow'>Thursday</div>
-      <div className='grow'>Friday</div>
-      <div className='grow'>Saturday</div>
+      <div className='grow text-base md:text-lg lg:text-xl'>Sunday</div>
+      <div className='grow text-base md:text-lg lg:text-xl'>Monday</div>
+      <div className='grow text-base md:text-lg lg:text-xl'>Tuesday</div>
+      <div className='grow text-base md:text-lg lg:text-xl'>Wednesday</div>
+      <div className='grow text-base md:text-lg lg:text-xl'>Thursday</div>
+      <div className='grow text-base md:text-lg lg:text-xl'>Friday</div>
+      <div className='grow text-base md:text-lg lg:text-xl'>Saturday</div>
     </div>,
   );
   for (let i = 0; i < daysInMonth.length; i++) {

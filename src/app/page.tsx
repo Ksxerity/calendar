@@ -24,7 +24,7 @@ const theme = {
         }
       }
     }
-  }
+  },
 }
 
 export default function Home() {
@@ -48,10 +48,13 @@ export default function Home() {
       <CalendarContext.Provider value={calendar}>
         <CalendarDispatchContext.Provider value={dispatch}>
           <div className='flex justify-center h-screen'>
-            <div className="flex flex-col items-center w-[85%]">
+            <div className="flex flex-col items-center w-4/5">
               <Actions />
-              <Selector />
-              <div className='border-2 border-groove border-[#BDC3C7] h-4/5'>
+              <div style={{ borderStyle: 'groove' }} className='border-b-2 border-[#BDC3C7] w-[90%]' />
+              <div className='w-4/5'>
+                <Selector />
+              </div>
+              <div style={{ borderStyle: 'groove' }} className='border-2 border-[#BDC3C7] h-4/5 w-4/5'>
                 {calendarType}
               </div>
             </div>

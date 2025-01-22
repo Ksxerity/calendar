@@ -73,7 +73,7 @@ const ActionButton = (props: ActionButtonProps): JSX.Element => {
         id={id} 
         data-tooltip={alt} 
         onClick={handleClick}
-        className="p-[3px]"
+        className="p-1"
       >
         <Image src={src} alt={alt} className='max-h-[5vh] max-w-[5vh] rounded-[50%] p-[.2rem] border-[3px] border-[#63b0e3] hover:bg-[#e3e3e3]' />
       </Button>
@@ -100,7 +100,7 @@ const Actions = (): JSX.Element => {
   return (
     <div className='flex justify-between items-center m-1.5 w-full'>
       <CreateEventModal show={showEventModal} handleClose={() => setShowEventModal(false)} />
-      <Typography className='text-[#34495e] md:text-xl lg:text-2xl xl:text-3xl'>
+      <Typography className='text-[#34495e] text-2xl md:text-3xl lg:text-4xl'>
         {populateCurrentDateLabel()}
       </Typography>
       <div>

@@ -305,4 +305,50 @@ const event13: IDateEvent = (() => {
 
 eventArray.push(event13);
 
+const event14: IDateEvent = (() => {
+  const from = new Date();
+  from.setDate(17);
+  from.setHours(16);
+  from.setMinutes(0);
+  from.setSeconds(0);
+  const to = new Date();
+  to.setDate(17);
+  to.setHours(17);
+  to.setMinutes(0);
+  to.setSeconds(0);
+  return {
+    id: 14,
+    name: '1 Hour Event',
+    from: from.toString(),
+    to: to.toString(),
+    color: 'lightgreen',
+    description: 'An event that spans over 1 hour.',
+  };
+})();
+
+eventArray.push(event14);
+
+const event15: IDateEvent = (() => {
+  const from = new Date();
+  from.setDate(17);
+  from.setHours(18);
+  from.setMinutes(0);
+  from.setSeconds(0);
+  const to = new Date();
+  to.setDate(17);
+  to.setHours(21);
+  to.setMinutes(0);
+  to.setSeconds(0);
+  return {
+    id: 15,
+    name: '3 Hour Event',
+    from: from.toString(),
+    to: to.toString(),
+    color: 'yellow',
+    description: 'An event that spans over 3 hours.',
+  };
+})();
+
+eventArray.push(event15);
+
 export default eventArray;

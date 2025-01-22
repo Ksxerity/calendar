@@ -68,7 +68,7 @@ const DurationSection = (props: DurationSectionProps): JSX.Element => {
       <div className={`pb-3 ${error ? 'text-red-500' : ''}`}>
         {`${label}${error ? ' (Date occurs before the "From" date above)' : ''}`}
       </div>
-      <div className='flex gap-x-[5px]'>
+      <div className='flex gap-x-1'>
         <div className='w-28'>
           <Select
             label='Month'
